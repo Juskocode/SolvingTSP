@@ -4,8 +4,8 @@
  * @brief This file contains the declaration of the Graph class and related classes.
  */
 
-#ifndef TSP_GRAPH_H
-#define TSP_GRAPH_H
+#ifndef SOLVINGTSP_GRAPH_H
+#define SOLVINGTSP_GRAPH_h
 
 #include <bits/stdc++.h>
 #include "minHeap.h"
@@ -66,3 +66,4 @@ public:
     bool operator<(Node& node) const;
 };
 
+#endif
