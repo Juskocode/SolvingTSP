@@ -53,8 +53,8 @@ public:
     int queueIndex{};         //! The index of the node in the priority queue.
     double lat;             //! latitude
     double lon;             //! longitude
-    double dist;            //! distance
-    bool visited;           //! aux field to mark node as "visited"
+    double dist = 0;            //! distance
+    bool visited = false;           //! aux field to mark node as "visited"
     Node* root{};             //! Pointer to the root node.
     std::vector<Edge*> adj;  //! adjacency list.
 
@@ -97,7 +97,7 @@ public:
      * otherwise it computes the distance using Haversine formula
      * @return The distance between the two nodes.
      */
-    double findDistance(int src, int dest);
+    static double findDistance(int src, int dest);
 
     /**
      * Calculates the distance between two airports given the latitude and longitude, using haversine formula\n \n
