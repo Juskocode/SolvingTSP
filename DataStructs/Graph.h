@@ -1,5 +1,3 @@
-#ifndef SOLVINGTSP_GRAPH_H
-#define SOLVINGTSP_GRAPH_H
 
 /**
  * @file Graph.h
@@ -68,4 +66,3 @@ public:
     bool operator<(Node& node) const;
 };
 
-#endif //SOLVINGTSP_GRAPH_H
