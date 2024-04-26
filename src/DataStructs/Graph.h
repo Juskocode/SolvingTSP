@@ -9,6 +9,9 @@
 
 #include <bits/stdc++.h>
 #include "minHeap.h"
+#define ull unsigned long long
+
+using namespace std;
 
 /**
  * @class Edge
@@ -80,9 +83,9 @@ public:
 
     /**
      * @brief Constructs a Graph object with the specified number of nodes.
-     * @param V The number of nodes in the graph.
+     * @param N The number of nodes in the graph.
      */
-    explicit Graph(int V);
+    explicit Graph(int N);
 
     /**
      * @brief Destructor for Graph.
@@ -109,6 +112,23 @@ public:
      * @return distance between the two airports
      */
     static double haversineDistanceGeneric(double lat1, double lon1, double lat2, double lon2);
+
+    /**
+     * @brief Solves the Traveling Salesman Problem given the mos optimal solution
+     * @brief This is an exact algorithm
+     * @return The minimum cost of the TSP tour.
+     */
+    double tspBackTracking();
+
+    /**
+     * @brief Helper function for the tspBackTracking algorithm.
+     * @param pos The current position in the TSP tour.
+     * @param mask The bitmask representing visited nodes.
+     * @param memo The memoization table for dynamic programming.
+     * @param dist The distance matrix.
+     * @return The minimum cost of the TSP tour from the current position with the given bitmask.
+     */
+    double tspBackTracking(int pos, ull mask, vector<vector<double>>& memo, const vector<vector<double>>& dist);
 
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
