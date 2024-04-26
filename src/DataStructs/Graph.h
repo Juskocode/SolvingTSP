@@ -114,8 +114,8 @@ public:
     static double haversineDistanceGeneric(double lat1, double lon1, double lat2, double lon2);
 
     /**
-     * @brief Solves the Traveling Salesman Problem given the mos optimal solution
-     * @brief This is an exact algorithm
+     * @brief Solves the Traveling Salesman Problem given the most optimal solution
+     * @brief This is Bellman-Held-karp algorithm an exact algorithm for TSP
      * @return The minimum cost of the TSP tour.
      */
     double tspBackTracking();

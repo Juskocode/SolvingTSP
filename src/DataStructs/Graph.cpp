@@ -83,7 +83,7 @@ double Graph::tspBackTracking(int pos, unsigned long long int mask, vector<vecto
                               const vector<vector<double>> &dist) {
     if (memo[pos][mask] != -1) return memo[pos][mask];
 
-    double ans = INT_MAX, tmp;
+    double res = INT_MAX;
 
     if (mask == (1 << N) - 1)
         return dist[pos][0] > 0 ? dist[pos][0] : INT_MAX;
@@ -91,13 +91,10 @@ double Graph::tspBackTracking(int pos, unsigned long long int mask, vector<vecto
     for (int i = 0; i < N; i++)
     {
         if (!(mask & (1 << i)) && dist[pos][i] > 0)
-        {
-            tmp = dist[pos][i] + tspBackTracking(i, mask | (1 << i), memo, dist);
-            ans = min(ans, tmp);
-        }
+            res = min(res, dist[pos][i] + tspBackTracking(i, mask | (1 << i), memo, dist));
     }
 
-    return memo[pos][mask] = ans;
+    return memo[pos][mask] = res;
 }
 
 
