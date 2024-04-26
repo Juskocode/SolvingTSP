@@ -12,8 +12,32 @@ int main()
 
     cout << "BackTrack Algorithm:\n";
     p.readOnlyEdges(g1, "../Data/Toy-Graphs/shipping.csv", 14);
+    cout << "shipping" << endl;
+    for (auto n : g1.nodes)
+    {
+        cout << n->id << " -> ";
+        for (auto i : n->adj)
+            cout << "|" << i->dest << ", " << i->weight << "| ";
+        cout << '\n';
+    }
     p.readOnlyEdges(g2, "../Data/Toy-Graphs/stadiums.csv", 11);
+    cout << "stadiums" << endl;
+    for (auto n : g2.nodes)
+    {
+        cout << n->id << " -> ";
+        for (auto i : n->adj)
+            cout << "|" << i->dest << ", " << i->weight << "| ";
+        cout << '\n';
+    }
     p.readOnlyEdges(g3, "../Data/Toy-Graphs/tourism.csv", 5);
+    cout << "tourism" << endl;
+    for (auto n : g3.nodes)
+    {
+        cout << n->id << " -> ";
+        for (auto i : n->adj)
+            cout << "|" << i->dest << ", " << i->weight << "| ";
+        cout << '\n';
+    }
     start = clock();
 
     cout << endl;
