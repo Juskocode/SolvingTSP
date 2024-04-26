@@ -83,9 +83,9 @@ public:
 
     /**
      * @brief Constructs a Graph object with the specified number of nodes.
-     * @param V The number of nodes in the graph.
+     * @param N The number of nodes in the graph.
      */
-    explicit Graph(int V);
+    explicit Graph(int N);
 
     /**
      * @brief Destructor for Graph.

@@ -4,33 +4,58 @@
 Edge::Edge(int dest, double w) : dest(dest), weight(w) {}
 
 
-Node::Node(int id, double lat, double lon) {
+Node::Node(int id, double lat, double lon) :
+    id(id), lat(lat), lon(lon), dist(0.0), visited(false)
+{}
+
+Node::Node(const Node &node)
+{
+    this->id = node.id;
+    this->lat = node.lat;
+    this->lon = node.lon;
+    this->dist = node.dist;
+    this->visited = node.visited;
 
 }
 
-Node::Node(const Node &node) {
-
+bool Node::operator<(Node &node) const
+{
+    return this->dist < node.dist;
 }
 
-bool Node::operator<(Node &node) const {
-    return false;
+Graph::Graph() : N(0) {}
+
+Graph::Graph(int N) : N(N)
+{
+    nodes.reserve(N);
 }
 
-Graph::Graph() {
-
-}
-
-Graph::Graph(int V) {
-
-}
-
-Graph::~Graph() {
-
+Graph::~Graph()
+{
+    for (auto &node: nodes)
+    {
+        for (auto &edge: node->adj)
+            delete edge;
+        delete node;
+    }
 }
 
 double Graph::haversineDistanceGeneric(double lat1, double lon1, double lat2, double lon2)
 {
-    return 0;
+    constexpr double M_PI_180 = 0.017453292519943295; // Precomputed value of PI / 180
+
+    double dLat = (lat2 - lat1) * M_PI_180;
+    double dLon = (lon2 - lon1) * M_PI_180;
+
+    lat1 *= M_PI_180;
+    lat2 *= M_PI_180;
+
+    double a = std::sin(dLat / 2) * std::sin(dLat / 2) +
+               std::sin(dLon / 2) * std::sin(dLon / 2) * std::cos(lat1) * std::cos(lat2);
+
+    double rad = 6371; // Earth's radius in kilometers
+    double c = 2 * std::asin(std::sqrt(a));
+    return rad * c;
 }
 
 double Graph::findDistance(int src, int dest)
