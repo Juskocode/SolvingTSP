@@ -39,6 +39,19 @@ int main()
         cout << '\n';
     }
     start = clock();
+    cout << "Shipping: " << g1.tspBackTracking() << endl;
+    end = clock();
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    start = clock();
+    cout << "Stadiums: " << g2.tspBackTracking() << endl;
+    end = clock();
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    start = clock();
+    cout << "Tourism: " << g3.tspBackTracking() << endl;
+    end = clock();
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+
+    cout << endl;
 
     cout << endl;
     return 0;
