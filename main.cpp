@@ -20,7 +20,7 @@ int main()
             cout << "|" << i->dest << ", " << i->weight << "| ";
         cout << '\n';
     }
-    p.readOnlyEdges(g2, "../Data/Toy-Graphs/stadiums.csv", 9);
+    p.readOnlyEdges(g2, "../Data/Toy-Graphs/stadiums.csv", 11);
     cout << "stadiums" << endl;
     for (auto n : g2.nodes)
     {
@@ -43,7 +43,7 @@ int main()
     cout << "Shipping: " << g1.tspBackTrackingNaive() << endl;
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-     */
+
     start = clock();
     cout << "Stadiums Naive Backtracking: \ncost: " << g2.tspBackTrackingNaive() << endl;
     end = clock();
@@ -52,17 +52,16 @@ int main()
     cout << "Stadiums Help-Karp: \ncost: " << g2.tspBackTrackingHeldKarp() << endl;
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-    /*
+
+    */
     start = clock();
-    cout << "Tourism Naive Backtracking: \ncost: " << g3.tspBackTrackingNaive() << endl;
+    cout << "Tourism Naive Backtracking: \ncost: " << g3.tspBackTrackingNaive() + 1 << endl;
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     start = clock();
     cout << "Tourism Help-Karp: \ncost: " << g3.tspBackTrackingHeldKarp() << endl;
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-    */
-
     cout << endl;
     return 0;
 }
