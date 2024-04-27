@@ -38,18 +38,25 @@ int main()
             cout << "|" << i->dest << ", " << i->weight << "| ";
         cout << '\n';
     }
+    /*
     start = clock();
-    cout << "Shipping: " << g1.tspBackTracking() << endl;
+    cout << "Shipping: " << g1.tspBackTrackingNaive() << endl;
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     start = clock();
-    cout << "Stadiums: " << g2.tspBackTracking() << endl;
+    cout << "Stadiums: " << g2.tspBackTrackingNaive() << endl;
+    end = clock();
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    start = clock();*/
+    start = clock();
+    cout << "Tourism Naive Backtracking: \ncost: " << g3.tspBackTrackingNaive() << endl;
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     start = clock();
-    cout << "Tourism: " << g3.tspBackTracking() << endl;
+    cout << "Tourism Help-Karp: \ncost: " << g3.tspBackTrackingHeldKarp() << endl;
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+
 
     cout << endl;
     return 0;
