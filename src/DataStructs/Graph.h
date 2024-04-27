@@ -127,8 +127,9 @@ public:
     /**
      * @brief Helper function for the Naive backTracking algorithm algorithm.
      * @param pos The current position in the TSP tour.
-     * @param mask The bitmask representing visited nodes.
-     * @param memo The memoization table for dynamic programming.
+     * @param visited vector of visited nodes.
+     * @param count depth of backtracking.
+     * @param cost current cost
      * @param dist The distance matrix.
      * @return The minimum cost of the TSP tour from the current position with the given bitmask.
      */
