@@ -9,6 +9,9 @@
 
 #include <bits/stdc++.h>
 #include "minHeap.h"
+#define ull unsigned long long
+
+using namespace std;
 
 /**
  * @class Edge
@@ -80,9 +83,9 @@ public:
 
     /**
      * @brief Constructs a Graph object with the specified number of nodes.
-     * @param V The number of nodes in the graph.
+     * @param N The number of nodes in the graph.
      */
-    explicit Graph(int V);
+    explicit Graph(int N);
 
     /**
      * @brief Destructor for Graph.
@@ -109,6 +112,50 @@ public:
      * @return distance between the two airports
      */
     static double haversineDistanceGeneric(double lat1, double lon1, double lat2, double lon2);
+
+    /**
+     * @brief Solves the Traveling Salesman Problem given the most optimal solution
+     * @brief This is a simple BackTracking, finds all "Hamiltonian Cycles" by BruteForce
+     * <b>Complexity\n</b>
+     * <pre>
+     *      <b>O(N!)</b>, N -> number of nodes in the graph
+     * </pre>
+     * @return The minimum cost of the TSP tour.
+     */
+    double  tspBackTrackingNaive();
+
+    /**
+     * @brief Helper function for the Naive backTracking algorithm algorithm.
+     * @param pos The current position in the TSP tour.
+     * @param visited vector of visited nodes.
+     * @param count depth of backtracking.
+     * @param cost current cost.
+     * @param dist The distance matrix.
+     * @return The minimum cost of the TSP tour from the current position with the given bitmask.
+     */
+    void tspBackTrackingNaive(vector<vector<double>> dist, int pos, vector<bool> &visited, int count, double cost,
+                                double &minCost);
+
+    /**
+     * @brief Solves the Traveling Salesman Problem given the most optimal solution
+     * @brief This is Bellman-Held-karp algorithm an exact algorithm for TSP
+     * <b>Complexity\n</b>
+     * <pre>
+     *      <b>O(N²*2^N)</b>, N -> number of nodes in the graph
+     * </pre>
+     * @return The minimum cost of the TSP tour.
+     */
+    double tspBackTrackingHeldKarp();
+
+    /**
+     * @brief Helper function for the Bellman-Held-karp algorithm algorithm.
+     * @param pos The current position in the TSP tour.
+     * @param mask The bitmask representing visited nodes.
+     * @param memo The memoization table for dynamic programming.
+     * @param dist The distance matrix.
+     * @return The minimum cost of the TSP tour from the current position with the given bitmask.
+     */
+    double tspBackTrackingHeldKarp(int pos, ull mask, vector<vector<double>>& memo, const vector<vector<double>>& dist);
 
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
