@@ -63,7 +63,42 @@ double Graph::findDistance(int src, int dest)
     return 0;
 }
 
-double Graph::tspBackTracking()
+double  Graph::tspBackTrackingNaive()
+{
+    vector<bool> visited(N, false);
+    vector<vector<double>> dist(N, vector<double>(N, -1));
+    for (auto &node : nodes)
+    {
+        for (auto &edge : node->adj)
+        {
+            dist[node->id][edge->dest] = edge->weight;
+            dist[edge->dest][node->id] = edge->weight;
+        }
+    }
+    double minCost = INT_MAX;
+    tspBackTrackingNaive(dist, 0, visited, 0, 0, minCost);
+    return minCost;
+}
+void  Graph::tspBackTrackingNaive(vector<vector<double>> dist, int pos, vector<bool>& visited, int count, double cost, double& minCost)
+{
+    if (count == N && dist[pos][0])
+    {
+        minCost = min(minCost, cost + dist[pos][0]);
+        return;
+    }
+
+    for (int i = 0; i < N; i++)
+    {
+        if (!visited[i] && dist[pos][i])
+        {
+            visited[i] = true;
+            tspBackTrackingNaive(dist, i, visited, count + 1, cost + dist[pos][i], minCost);
+            visited[i] = false;
+        }
+    }
+}
+
+double Graph::tspBackTrackingHeldKarp()
 {
     vector<vector<double>> memo(N, vector<double>(1 << N, -1));
     vector<vector<double>> dist(N, vector<double>(N, -1));
@@ -76,14 +111,14 @@ double Graph::tspBackTracking()
         }
     }
 
-    return tspBackTracking(0, 1, memo, dist);
+    return tspBackTrackingHeldKarp(0, 1, memo, dist);
 }
 
-double Graph::tspBackTracking(int pos, unsigned long long int mask, vector<vector<double>> &memo,
+double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vector<vector<double>> &memo,
                               const vector<vector<double>> &dist) {
     if (memo[pos][mask] != -1) return memo[pos][mask];
 
-    double ans = INT_MAX, tmp;
+    double res = INT_MAX;
 
     if (mask == (1 << N) - 1)
         return dist[pos][0] > 0 ? dist[pos][0] : INT_MAX;
@@ -91,13 +126,10 @@ double Graph::tspBackTracking(int pos, unsigned long long int mask, vector<vecto
     for (int i = 0; i < N; i++)
     {
         if (!(mask & (1 << i)) && dist[pos][i] > 0)
-        {
-            tmp = dist[pos][i] + tspBackTracking(i, mask | (1 << i), memo, dist);
-            ans = min(ans, tmp);
-        }
+            res = min(res, dist[pos][i] + tspBackTrackingHeldKarp(i, mask | (1 << i), memo, dist));
     }
 
-    return memo[pos][mask] = ans;
+    return memo[pos][mask] = res;
 }
 
 
