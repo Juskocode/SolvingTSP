@@ -129,7 +129,7 @@ public:
      * @param pos The current position in the TSP tour.
      * @param visited vector of visited nodes.
      * @param count depth of backtracking.
-     * @param cost current cost
+     * @param cost current cost.
      * @param dist The distance matrix.
      * @return The minimum cost of the TSP tour from the current position with the given bitmask.
      */
