@@ -157,14 +157,6 @@ public:
      */
     double tspBackTrackingHeldKarp(int pos, ull mask, vector<vector<double>>& memo, const vector<vector<double>>& dist);
 
-    /**
-     * @brief Solves the Traveling Salesman Problem using the triangular approximation heuristic.
-     * @brief as this is an approximation algorithm, it will give a sub optimal result
-     * @param edges Flag indicating whether to include edge information in the output.
-        ??
-     * @return The approximate minimum cost of the TSP tour.
-     */
-    double tspTriangularAproxHeuristic(bool edges = false);
 
     /**
      * @brief Generates minimum-spanning-tree from src

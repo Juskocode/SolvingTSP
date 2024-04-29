@@ -137,71 +137,39 @@ void Graph::buildMst(int src)
 {
     MinHeap<Node> q;
 
-    for (auto v: nodes) {
+    for (auto v: nodes)
+    {
         v->dist = 1e11;
         v->visited = false;
         q.insert(v);
     }
 
     nodes[src]->dist = 0;
+    nodes[src]->visited = true;
     q.decreaseKey(nodes[src]);
 
-    while (!q.empty()) {
+    while (!q.empty())
+    {
         auto v = q.extractMin();
-        v->visited = true;
 
+        //push undirected to mst, if node is a level greater than 1 in bfs
         if (v->root)
         {
             mst[v->root->id].push_back(v->id);
             mst[v->id].push_back(v->root->id);
         }
 
-        for (auto &edge: v->adj) {
+        for (auto &edge: v->adj)
+        {
             auto node = nodes[edge->dest];
-            if (node->visited) { continue; }
             double d = edge->weight;
-            if (d < node->dist) {
+            if (!node->visited && d < node->dist)
+            {
                 node->dist = d;
                 node->root = v;
+                v->visited = true;
                 q.decreaseKey(node);
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
