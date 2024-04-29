@@ -28,6 +28,7 @@ Graph::Graph() : N(0) {}
 Graph::Graph(int N) : N(N)
 {
     nodes.reserve(N);
+    mst.resize(N);
 }
 
 Graph::~Graph()
@@ -132,7 +133,75 @@ double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vect
     return memo[pos][mask] = res;
 }
 
-vector<Edge> Graph::buildMst(int src)
+void Graph::buildMst(int src)
 {
+    MinHeap<Node> q;
 
+    for (auto v: nodes) {
+        v->dist = 1e11;
+        v->visited = false;
+        q.insert(v);
+    }
+
+    nodes[src]->dist = 0;
+    q.decreaseKey(nodes[src]);
+
+    while (!q.empty()) {
+        auto v = q.extractMin();
+        v->visited = true;
+
+        if (v->root)
+        {
+            mst[v->root->id].push_back(v->id);
+            mst[v->id].push_back(v->root->id);
+        }
+
+        for (auto &edge: v->adj) {
+            auto node = nodes[edge->dest];
+            if (node->visited) { continue; }
+            double d = edge->weight;
+            if (d < node->dist) {
+                node->dist = d;
+                node->root = v;
+                q.decreaseKey(node);
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

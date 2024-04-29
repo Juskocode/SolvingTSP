@@ -63,5 +63,10 @@ int main()
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     cout << endl;
+    cout << "Tourism mst: " << endl;
+    g3.buildMst(0);
+    for (const auto & e : g3.mst) {
+            cout << e << " ";
+    }
     return 0;
 }

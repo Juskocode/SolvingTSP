@@ -174,9 +174,10 @@ public:
      *      <b>O(|E|log|V|)</b>, E -> number of edges, V -> number of nodes
      * </pre>
      */
-    vector<Edge> buildMst(int src);
+    void buildMst(int src);
 
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
+    std::vector<vector<int>> mst; //! Vector containing the mst edges
 };
 #endif
