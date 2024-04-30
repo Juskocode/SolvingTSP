@@ -151,7 +151,6 @@ void Graph::buildMst(int src)
     while (!q.empty())
     {
         auto v = q.extractMin();
-
         //push undirected to mst, if node is a level greater than 1 in bfs
         if (v->root)
         {
@@ -173,3 +172,43 @@ void Graph::buildMst(int src)
         }
     }
 }
+
+void Graph::dfsMst()
+{
+    vector<int> path(N);
+    for (auto v : nodes)
+        v->visited = false;
+    dfsMst(path, 0);
+}
+
+void Graph::dfsMst(vector<int> &path, int src)
+{
+    nodes[src]->visited = true;
+    path.push_back(src);
+
+    for (auto &edge : nodes[src]->adj)
+    {
+        int dest = edge->dest;
+        if (!nodes[dest]->visited)
+            dfsMst(path, dest);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
