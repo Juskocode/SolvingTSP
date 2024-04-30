@@ -4,6 +4,7 @@
 using namespace std;
 int main()
 {
+    //TODO ORGANIZE this shitty main into testing
     std::cout << "Run" << '\n';
     Graph g1, g2, g3;
 
@@ -66,27 +67,31 @@ int main()
 
     cout << "mst's edges: " << endl;
     g1.buildMst(0);
-    for (const auto & e : g1.mst)
+    for (int i = 0; i < g1.N; i++)
     {
-        for (const auto & n : e)
-            cout << n << " ";
+        auto adj = g1.mst[i];
+        for (const auto & e : adj)
+            cout << i << ", " << e << " ";
         cout << endl;
     }
     cout << endl;
     g2.buildMst(0);
-    for (const auto & e : g2.mst)
+    for (int i = 0; i < g2.N; i++)
     {
-        for (const auto & n : e)
-            cout << n << " ";
+        auto adj = g2.mst[i];
+        for (const auto & e : adj)
+            cout << i << "," << e << " ";
         cout << endl;
     }
     cout << endl;
     g3.buildMst(0);
-    for (const auto & e : g3.mst)
+    for (int i = 0; i < g3.N; i++)
     {
-        for (const auto & n : e)
-            cout << n << " ";
+        auto adj = g3.mst[i];
+        for (const auto & e : adj)
+            cout << i << "," << e << " ";
         cout << endl;
     }
+    cout << endl;
     return 0;
 }
