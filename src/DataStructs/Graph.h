@@ -157,7 +157,19 @@ public:
      */
     double tspBackTrackingHeldKarp(int pos, ull mask, vector<vector<double>>& memo, const vector<vector<double>>& dist);
 
+
+    /**
+     * @brief Generates minimum-spanning-tree from src
+     * @param src The starting node index
+     * <b>Complexity\n</b>
+     * <pre>
+     *      <b>O(|E|log|V|)</b>, E -> number of edges, V -> number of nodes
+     * </pre>
+     */
+    void buildMst(int src);
+
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
+    std::vector<vector<int>> mst; //! Vector containing the mst edges
 };
 #endif
