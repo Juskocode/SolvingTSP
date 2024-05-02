@@ -185,12 +185,12 @@ void Graph::dfsMst(vector<int> &path, int src)
 {
     nodes[src]->visited = true;
     path.push_back(src);
-
-    for (auto &edge : nodes[src]->adj)
+    cout << src << endl;
+    for (auto &edge : mst[src])
     {
-        int dest = edge->dest;
-        if (!nodes[dest]->visited)
-            dfsMst(path, dest);
+        auto dest = nodes[edge];
+        if (!dest->visited)
+            dfsMst(path, dest->id);
     }
 }
 
