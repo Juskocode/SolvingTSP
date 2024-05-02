@@ -34,7 +34,7 @@ void testBackTrackNaive(Graph g, clock_t &start, clock_t &end)
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
 }
 
-void testBackTrackHeldKarp(Graph g, clock_t &start, clock_t &end)
+void testBackTrackHeldKarp(const Graph &g, clock_t &start, clock_t &end)
 {
     start = clock();
     cout << "TSP tour cost: " << g.tspBackTrackingHeldKarp() << endl;
@@ -76,13 +76,14 @@ int main()
     Graph g;
     Parser  p;
     //p.readOnlyEdges(g, "../Data/Extra_Fully_Connected_Graphs/edges_900.csv", 900);
-    p.readOnlyEdges(g, "../Data/Toy-Graphs/tourism.csv", 5);
+    p.readOnlyEdges(g, "../Data/Real_world_Graphs/graph1/edges.csv", 1000);
 
     printGraph(g);
+    /*
     g.buildMst(0);
     printMstGraph(g);
     g.dfsMst();
-    testBackTrackHeldKarp(g, start, end);
+     */
     cout << "Triangular Approx:" << endl;
     start = clock();
     cout << "TSP tour cost: " << g.tspTriangularApproxHeuristic() << endl;

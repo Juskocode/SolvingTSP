@@ -145,7 +145,7 @@ public:
      * </pre>
      * @return The minimum cost of the TSP tour.
      */
-    double tspBackTrackingHeldKarp();
+    double tspBackTrackingHeldKarp() const;
 
     /**
      * @brief Helper function for the Bellman-Held-karp algorithm algorithm.
@@ -155,7 +155,7 @@ public:
      * @param dist The distance matrix.
      * @return The minimum cost of the TSP tour from the current position with the given bitmask.
      */
-    double tspBackTrackingHeldKarp(int pos, ull mask, vector<vector<double>>& memo, const vector<vector<double>>& dist);
+    double tspBackTrackingHeldKarp(int pos, ull mask, vector<vector<double>>& memo, const vector<vector<double>>& dist) const;
 
     /**
      * @brief Generates minimum-spanning-tree from src using Prim's algorithm

@@ -102,13 +102,13 @@ void  Graph::tspBackTrackingNaive(vector<vector<double>> dist, int pos, vector<b
     }
 }
 
-double Graph::tspBackTrackingHeldKarp()
+double Graph::tspBackTrackingHeldKarp() const
 {
     vector<vector<double>> memo(N, vector<double>(1 << N, -1));
     vector<vector<double>> dist(N, vector<double>(N, -1));
-    for (auto &node : nodes)
+    for (const auto &node : nodes)
     {
-        for (auto &edge : node->adj)
+        for (const auto &edge : node->adj)
         {
             dist[node->id][edge->dest] = edge->weight;
             dist[edge->dest][node->id] = edge->weight;
@@ -119,7 +119,7 @@ double Graph::tspBackTrackingHeldKarp()
 }
 
 double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vector<vector<double>> &memo,
-                              const vector<vector<double>> &dist) {
+                              const vector<vector<double>> &dist) const {
     if (memo[pos][mask] != -1) return memo[pos][mask];
 
     double res = INT_MAX;
@@ -200,7 +200,7 @@ void Graph::dfsMst(vector<int> &path, int src)
 
 double Graph::tspTriangularApproxHeuristic()
 {
-    vector<int> path(N);
+    vector<int> path;
     double cost = 0.0;
     //First build the mst of the graph
     this->buildMst(0);
