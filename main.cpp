@@ -79,10 +79,15 @@ int main()
     p.readOnlyEdges(g, "../Data/Toy-Graphs/tourism.csv", 5);
 
     printGraph(g);
-
-    //testBackTrackHeldKarp(g, start, end);
     g.buildMst(0);
     printMstGraph(g);
     g.dfsMst();
+    testBackTrackHeldKarp(g, start, end);
+    cout << "Triangular Approx:" << endl;
+    start = clock();
+    cout << "TSP tour cost: " << g.tspTriangularApproxHeuristic() << endl;
+    end = clock();
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+
     return 0;
 }

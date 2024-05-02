@@ -59,9 +59,12 @@ double Graph::haversineDistanceGeneric(double lat1, double lon1, double lat2, do
     return rad * c;
 }
 
-double Graph::findDistance(int src, int dest)
+double Graph::findDistance(int src, int dst)
 {
-    return 0;
+    for (auto &edge: nodes[src]->adj)
+        if (edge->dest == dst)
+            return edge->weight;
+    return -1;// return here Haversine dist of the two nodes, no weight was found
 }
 
 double  Graph::tspBackTrackingNaive()
@@ -173,6 +176,7 @@ void Graph::buildMst(int src)
     }
 }
 
+//! This is only for testing purposes
 void Graph::dfsMst()
 {
     vector<int> path(N);
@@ -194,17 +198,28 @@ void Graph::dfsMst(vector<int> &path, int src)
     }
 }
 
+double Graph::tspTriangularApproxHeuristic()
+{
+    vector<int> path(N);
+    double cost = 0.0;
+    //First build the mst of the graph
+    this->buildMst(0);
 
+    //Set all node unvisited
+    for (auto node : nodes)
+        node->visited = false;
 
+    //Perform a dfs to get the preorder of mst of the graph
+    dfsMst(path, 0);
 
+    //Compute the total cost of the mst pre order
+    for (int i = 0; i < N - 1; i++)
+        cost += findDistance(path[i], path[i + 1]);
+    //Connect the last Vertex to the starting node to get the TSP tour
+    cost += findDistance(path[N - 1], path[0]);
 
-
-
-
-
-
-
-
+    return cost;
+}
 
 
 

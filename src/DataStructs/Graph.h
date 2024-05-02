@@ -100,7 +100,7 @@ public:
      * otherwise it computes the distance using Haversine formula
      * @return The distance between the two nodes.
      */
-    static double findDistance(int src, int dest);
+    double findDistance(int src, int dest);
 
     /**
      * Calculates the distance between two airports given the latitude and longitude, using haversine formula\n \n
