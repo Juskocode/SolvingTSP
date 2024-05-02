@@ -2,18 +2,9 @@
 #include "src/DataManagement/Parser.h"
 
 using namespace std;
-int main()
+
+void printGraph(const Graph &g1)
 {
-    //TODO ORGANIZE this shitty main into testing
-    std::cout << "Run" << '\n';
-    Graph g1, g2, g3;
-
-    Parser p;
-    clock_t start, end;
-
-    cout << "BackTrack Algorithm:\n";
-    p.readOnlyEdges(g1, "../Data/Toy-Graphs/shipping.csv", 14);
-    cout << "shipping" << endl;
     for (auto n : g1.nodes)
     {
         cout << n->id << " -> ";
@@ -21,77 +12,83 @@ int main()
             cout << "|" << i->dest << ", " << i->weight << "| ";
         cout << '\n';
     }
-    p.readOnlyEdges(g2, "../Data/Toy-Graphs/stadiums.csv", 11);
-    cout << "stadiums" << endl;
-    for (auto n : g2.nodes)
-    {
-        cout << n->id << " -> ";
-        for (auto i : n->adj)
-            cout << "|" << i->dest << ", " << i->weight << "| ";
-        cout << '\n';
-    }
-    p.readOnlyEdges(g3, "../Data/Toy-Graphs/tourism.csv", 5);
-    cout << "tourism" << endl;
-    for (auto n : g3.nodes)
-    {
-        cout << n->id << " -> ";
-        for (auto i : n->adj)
-            cout << "|" << i->dest << ", " << i->weight << "| ";
-        cout << '\n';
-    }
+    cout << '\n';
+}
 
-    start = clock();
-    cout << "Shipping: " << g1.tspBackTrackingHeldKarp() << endl;
-    end = clock();
-    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-
-
-    //start = clock();
-    //cout << "Stadiums Naive Backtracking: \ncost: " << g2.tspBackTrackingNaive() << endl;
-    //end = clock();
-    //cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-    start = clock();
-    cout << "Stadiums Help-Karp: \ncost: " << g2.tspBackTrackingHeldKarp() << endl;
-    end = clock();
-    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-
-    start = clock();
-    cout << "Tourism Naive Backtracking: \ncost: " << g3.tspBackTrackingNaive() + 1 << endl;
-    end = clock();
-    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-    start = clock();
-    cout << "Tourism Held-Karp: \ncost: " << g3.tspBackTrackingHeldKarp() << endl;
-    end = clock();
-    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-    cout << endl;
-
-    cout << "mst's edges: " << endl;
-    g1.buildMst(0);
+void printMstGraph(const Graph &g1)
+{
     for (int i = 0; i < g1.N; i++)
     {
         auto adj = g1.mst[i];
         for (const auto & e : adj)
-            cout << i << ", " << e << " ";
-        cout << endl;
-    }
-    cout << endl;
-    g2.buildMst(0);
-    for (int i = 0; i < g2.N; i++)
-    {
-        auto adj = g2.mst[i];
-        for (const auto & e : adj)
             cout << i << "," << e << " ";
         cout << endl;
     }
-    cout << endl;
-    g3.buildMst(0);
-    for (int i = 0; i < g3.N; i++)
-    {
-        auto adj = g3.mst[i];
-        for (const auto & e : adj)
-            cout << i << "," << e << " ";
-        cout << endl;
-    }
-    cout << endl;
+}
+
+void testBackTrackNaive(Graph g, clock_t &start, clock_t &end)
+{
+    start = clock();
+    cout << "TSP tour cost: " << g.tspBackTrackingNaive() << endl;
+    end = clock();
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+}
+
+void testBackTrackHeldKarp(const Graph &g, clock_t &start, clock_t &end)
+{
+    start = clock();
+    cout << "TSP tour cost: " << g.tspBackTrackingHeldKarp() << endl;
+    end = clock();
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+}
+
+void testMst(Graph g)
+{
+    cout << "mst's edges g1: " << endl;
+    g.buildMst(0);
+    printMstGraph(g);
+}
+
+void testRead()
+{
+    Graph g1, g2, g3;
+    Parser p;
+
+    p.readOnlyEdges(g1, "../Data/Toy-Graphs/shipping.csv", 14);
+    p.readOnlyEdges(g2, "../Data/Toy-Graphs/stadiums.csv", 11);
+    p.readOnlyEdges(g3, "../Data/Toy-Graphs/tourism.csv", 5);
+
+    cout << "g1 :" << endl;
+    printGraph(g1);
+    cout << "g2 :" << endl;
+    printGraph(g2);
+    cout << "g3 :" << endl;
+    printGraph(g3);
+}
+
+int main()
+{
+    //TODO ORGANIZE this shitty main into testing
+    std::cout << "Run" << '\n';
+
+    clock_t start, end;
+
+    Graph g;
+    Parser  p;
+    //p.readOnlyEdges(g, "../Data/Extra_Fully_Connected_Graphs/edges_900.csv", 900);
+    p.readOnlyEdges(g, "../Data/Real_world_Graphs/graph1/edges.csv", 1000);
+
+    printGraph(g);
+    /*
+    g.buildMst(0);
+    printMstGraph(g);
+    g.dfsMst();
+     */
+    cout << "Triangular Approx:" << endl;
+    start = clock();
+    cout << "TSP tour cost: " << g.tspTriangularApproxHeuristic() << endl;
+    end = clock();
+    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+
     return 0;
 }

@@ -59,9 +59,12 @@ double Graph::haversineDistanceGeneric(double lat1, double lon1, double lat2, do
     return rad * c;
 }
 
-double Graph::findDistance(int src, int dest)
+double Graph::findDistance(int src, int dst)
 {
-    return 0;
+    for (auto &edge: nodes[src]->adj)
+        if (edge->dest == dst)
+            return edge->weight;
+    return -1;// return here Haversine dist of the two nodes, no weight was found
 }
 
 double  Graph::tspBackTrackingNaive()
@@ -99,13 +102,13 @@ void  Graph::tspBackTrackingNaive(vector<vector<double>> dist, int pos, vector<b
     }
 }
 
-double Graph::tspBackTrackingHeldKarp()
+double Graph::tspBackTrackingHeldKarp() const
 {
     vector<vector<double>> memo(N, vector<double>(1 << N, -1));
     vector<vector<double>> dist(N, vector<double>(N, -1));
-    for (auto &node : nodes)
+    for (const auto &node : nodes)
     {
-        for (auto &edge : node->adj)
+        for (const auto &edge : node->adj)
         {
             dist[node->id][edge->dest] = edge->weight;
             dist[edge->dest][node->id] = edge->weight;
@@ -116,7 +119,7 @@ double Graph::tspBackTrackingHeldKarp()
 }
 
 double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vector<vector<double>> &memo,
-                              const vector<vector<double>> &dist) {
+                              const vector<vector<double>> &dist) const {
     if (memo[pos][mask] != -1) return memo[pos][mask];
 
     double res = INT_MAX;
@@ -151,7 +154,6 @@ void Graph::buildMst(int src)
     while (!q.empty())
     {
         auto v = q.extractMin();
-
         //push undirected to mst, if node is a level greater than 1 in bfs
         if (v->root)
         {
@@ -173,3 +175,55 @@ void Graph::buildMst(int src)
         }
     }
 }
+
+//! This is only for testing purposes
+void Graph::dfsMst()
+{
+    vector<int> path(N);
+    for (auto v : nodes)
+        v->visited = false;
+    dfsMst(path, 0);
+}
+
+void Graph::dfsMst(vector<int> &path, int src)
+{
+    nodes[src]->visited = true;
+    path.push_back(src);
+    cout << src << endl;
+    for (auto &edge : mst[src])
+    {
+        auto dest = nodes[edge];
+        if (!dest->visited)
+            dfsMst(path, dest->id);
+    }
+}
+
+double Graph::tspTriangularApproxHeuristic()
+{
+    vector<int> path;
+    double cost = 0.0;
+    //First build the mst of the graph
+    this->buildMst(0);
+
+    //Set all node unvisited
+    for (auto node : nodes)
+        node->visited = false;
+
+    //Perform a dfs to get the preorder of mst of the graph
+    dfsMst(path, 0);
+
+    //Compute the total cost of the mst pre order
+    for (int i = 0; i < N - 1; i++)
+        cost += findDistance(path[i], path[i + 1]);
+    //Connect the last Vertex to the starting node to get the TSP tour
+    cost += findDistance(path[N - 1], path[0]);
+
+    return cost;
+}
+
+
+
+
+
+
+

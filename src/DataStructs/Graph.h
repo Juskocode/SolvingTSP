@@ -100,7 +100,7 @@ public:
      * otherwise it computes the distance using Haversine formula
      * @return The distance between the two nodes.
      */
-    static double findDistance(int src, int dest);
+    double findDistance(int src, int dest);
 
     /**
      * Calculates the distance between two airports given the latitude and longitude, using haversine formula\n \n
@@ -145,7 +145,7 @@ public:
      * </pre>
      * @return The minimum cost of the TSP tour.
      */
-    double tspBackTrackingHeldKarp();
+    double tspBackTrackingHeldKarp() const;
 
     /**
      * @brief Helper function for the Bellman-Held-karp algorithm algorithm.
@@ -155,11 +155,10 @@ public:
      * @param dist The distance matrix.
      * @return The minimum cost of the TSP tour from the current position with the given bitmask.
      */
-    double tspBackTrackingHeldKarp(int pos, ull mask, vector<vector<double>>& memo, const vector<vector<double>>& dist);
-
+    double tspBackTrackingHeldKarp(int pos, ull mask, vector<vector<double>>& memo, const vector<vector<double>>& dist) const;
 
     /**
-     * @brief Generates minimum-spanning-tree from src
+     * @brief Generates minimum-spanning-tree from src using Prim's algorithm
      * @param src The starting node index
      * <b>Complexity\n</b>
      * <pre>
@@ -167,6 +166,25 @@ public:
      * </pre>
      */
     void buildMst(int src);
+
+    /**
+     * @brief Generates the dfs path of the mst of the graph
+     * */
+    void dfsMst();
+
+    /**
+     * @brief Helper function of dfsMst
+     * @param path Stores the dfs traversal of the mst
+     * @param src The starting node index
+     * */
+    void dfsMst(vector<int> &path, int src);
+
+    /**
+     * @brief step1 : build mst, DONE :)
+     * @brief step2 : dfs traversal, DONE :)
+     * @brief step3 : Compute path //TODO
+     * */
+    double tspTriangularApproxHeuristic();
 
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
