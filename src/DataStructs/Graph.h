@@ -134,7 +134,7 @@ public:
      * @return The minimum cost of the TSP tour from the current position with the given bitmask.
      */
     void tspBackTrackingNaive(vector<vector<double>> dist, int pos, vector<bool> &visited, int count, double cost,
-                                double &minCost);
+                              double &minCost);
 
     /**
      * @brief Solves the Traveling Salesman Problem given the most optimal solution
@@ -182,7 +182,10 @@ public:
     /**
      * @brief step1 : build mst, DONE :)
      * @brief step2 : dfs traversal, DONE :)
-     * @brief step3 : Compute path //TODO
+     * @brief step3 : Compute path DONE :)
+     * @brief This heuristic approximation only works for complete graphs
+     * //TODO Make this heuristic work for incomplete graphs aka real graphs
+     * //TODO COMPUTE MST FOR INCOMPLETE GRAPHS
      * */
     double tspTriangularApproxHeuristic();
 
