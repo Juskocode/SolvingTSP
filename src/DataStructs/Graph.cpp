@@ -5,7 +5,7 @@ Edge::Edge(int dest, double w) : dest(dest), weight(w) {}
 
 
 Node::Node(int id, double lat, double lon) :
-    id(id), lat(lat), lon(lon), dist(0.0), visited(false)
+        id(id), lat(lat), lon(lon), dist(0.0), visited(false)
 {}
 
 Node::Node(const Node &node)
@@ -64,7 +64,7 @@ double Graph::findDistance(int src, int dst)
     for (auto &edge: nodes[src]->adj)
         if (edge->dest == dst)
             return edge->weight;
-    return -1;// return here Haversine dist of the two nodes, no weight was found
+    return haversineDistanceGeneric(nodes[src]->lat, nodes[src]->lon, nodes[dst]->lat, nodes[dst]->lon);
 }
 
 double  Graph::tspBackTrackingNaive()
@@ -119,7 +119,7 @@ double Graph::tspBackTrackingHeldKarp() const
 }
 
 double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vector<vector<double>> &memo,
-                              const vector<vector<double>> &dist) const {
+                                      const vector<vector<double>> &dist) const {
     if (memo[pos][mask] != -1) return memo[pos][mask];
 
     double res = INT_MAX;
@@ -189,7 +189,7 @@ void Graph::dfsMst(vector<int> &path, int src)
 {
     nodes[src]->visited = true;
     path.push_back(src);
-    cout << src << endl;
+    //cout << src << endl;
     for (auto &edge : mst[src])
     {
         auto dest = nodes[edge];
@@ -220,10 +220,3 @@ double Graph::tspTriangularApproxHeuristic()
 
     return cost;
 }
-
-
-
-
-
-
-
