@@ -49,6 +49,38 @@ void testMst(Graph g)
     printMstGraph(g);
 }
 
+void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clock_t end)
+{
+    vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
+    for (int n: files)
+    {
+        Graph g;
+        string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
+        p.readOnlyEdges(g, path, n);
+        start = clock();
+        cout << "Triangle Approx " << n << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << "km" << endl;
+        end = clock();
+        cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    }
+}
+
+void testTriangularRealGraphs(const Parser &p, clock_t start, clock_t end)
+{
+    for (int i = 1; i < 4; i++)
+    {
+        Graph g;
+        string path = "../Data/Real_world_Graphs/graph" + to_string(i);
+
+        p.readNodes(g, path + "/nodes.csv");
+        p.readEdges(g, path + "/edges.csv");
+
+        start = clock();
+        cout << "Triangle Approx Real Graph" << i << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << "km" << endl;
+        end = clock();
+        cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    }
+}
+
 void testRead()
 {
     Graph g1, g2, g3;
@@ -71,23 +103,9 @@ int main()
     //TODO ORGANIZE this shitty main into testing
     std::cout << "Run" << '\n';
     clock_t start, end;
-
-    Graph g;
     Parser  p;
-    //p.readOnlyEdges(g, "../Data/Extra_Fully_Connected_Graphs/edges_900.csv", 900);
-    p.readOnlyEdges(g, "../Data/Real_world_Graphs/graph1/edges.csv", 1000);
-
-    printGraph(g);
-    /*
-    g.buildMst(0);
-    printMstGraph(g);
-    g.dfsMst();
-     */
-    cout << "Triangular Approx:" << endl;
-    start = clock();
-    cout << "TSP tour cost: " << g.tspTriangularApproxHeuristic() << endl;
-    end = clock();
-    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    testTriangularExtraFullyConnectedGraphs(p, start, end);
+    testTriangularRealGraphs(p, start, end);
 
     return 0;
 }
