@@ -6,8 +6,8 @@ class Parser : private Graph{
 public:
     Parser();
 
-    void readOnlyEdges(Graph &g, const std::string &path, int N);
-    void readNodes(Graph &g, const std::string &path);
-    void readEdges(Graph &g, const std::string &path);
+    void readOnlyEdges(Graph &g, const std::string &path, int N) const;
+    void readNodes(Graph &g, const std::string &path) const;
+    void readEdges(Graph &g, const std::string &path) const;
 };
 #endif //TSP_PARSER_H
