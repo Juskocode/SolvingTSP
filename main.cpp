@@ -70,7 +70,6 @@ int main()
 {
     //TODO ORGANIZE this shitty main into testing
     std::cout << "Run" << '\n';
-
     clock_t start, end;
 
     Graph g;
