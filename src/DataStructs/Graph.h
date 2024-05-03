@@ -182,7 +182,8 @@ public:
     /**
      * @brief step1 : build mst, DONE :)
      * @brief step2 : dfs traversal, DONE :)
-     * @brief step3 : Compute path //TODO
+     * @brief step3 : Compute path DONE :)
+     * @brief This heuristic approximation only works for complete graphs
      * */
     double tspTriangularApproxHeuristic();
 
