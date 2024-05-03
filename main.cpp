@@ -104,6 +104,7 @@ int main()
     std::cout << "Run" << '\n';
     clock_t start, end;
     Parser  p;
+
     testTriangularExtraFullyConnectedGraphs(p, start, end);
     testTriangularRealGraphs(p, start, end);
 
