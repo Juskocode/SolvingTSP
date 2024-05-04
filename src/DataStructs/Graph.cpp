@@ -220,3 +220,24 @@ double Graph::tspTriangularApproxHeuristic()
 
     return cost;
 }
+
+double Graph::tspCristianoRonaldo()
+{
+    vector<int> degree(N, 0);
+    //!Compute MST of graph
+    buildMst(0);
+
+    //!Handshack lemma
+    for (auto &v : nodes)
+    {
+        degree[v->id] = mst[v->id].size();
+        if (degree[v->id] % 2)
+            v->visited = false;
+        else
+            v->visited = true;
+    }
+
+    //TODO Find minimum weight perfect machting
+
+    return 0.0;
+}

@@ -196,6 +196,16 @@ public:
      * */
     double tspTriangularApproxHeuristic();
 
+    /**@note Steps for Christofides algorithm
+    @brief Create a MST T of G. Done.:)
+    @brief Let O be the set of vertices with odd degree in T. By the handshaking lemma, O has an even number of vertices.//DONE :)
+    @brief Generate minimum-weight perfect matching M in the subgraph induced in G by O. //TODO
+    @brief Combine the edges of M and T to form a connected multigraph H in which each vertex has even degree.//TODO
+    @brief Form an Eulerian circuit in H.//TODO
+    @brief the circuit found in previous step into a Hamiltonian circuit by skipping repeated vertices (shortcutting).//TODO
+     * */
+    double tspCristianoRonaldo();
+
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
     std::vector<vector<int>> mst; //! Vector containing the mst edges
