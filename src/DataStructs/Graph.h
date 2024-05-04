@@ -180,12 +180,19 @@ public:
     void dfsMst(vector<int> &path, int src);
 
     /**
+     * @brief Solves the TSP using triangular approximation heuristic
      * @brief step1 : build mst, DONE :)
      * @brief step2 : dfs traversal, DONE :)
      * @brief step3 : Compute path DONE :)
      * @brief This heuristic approximation only works for complete graphs
      * //TODO Make this heuristic work for incomplete graphs aka real graphs
      * //TODO COMPUTE MST FOR INCOMPLETE GRAPHS
+     * <b>Complexity\n</b>
+     * <pre>
+     *      <b>O(|E|log|V|)</b>, E -> number of edges, V -> number of nodes
+     * </pre>
+     * @note The cost of this approach will mainly come from Prims algorithm, as the preorder and cost computation are linear tasks
+     * @return An approximation cost of the TSP tour
      * */
     double tspTriangularApproxHeuristic();
 
