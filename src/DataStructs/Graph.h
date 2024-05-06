@@ -196,6 +196,14 @@ public:
      * */
     double tspTriangularApproxHeuristic();
 
+    void handShackLemma(vector<int> &degree);
+
+    void perfectMatching(vector<int> &perfectMatches);
+
+    void combine(const vector<int> &perfectMatches);
+
+    void eulerianCircuit(vector<int> &eulerT);
+
     /**@note Steps for Christofides algorithm
     @brief Create a MST T of G. Done.:)
     @brief Let O be the set of vertices with odd degree in T. By the handshaking lemma, O has an even number of vertices.//DONE :)

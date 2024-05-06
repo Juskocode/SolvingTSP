@@ -221,13 +221,8 @@ double Graph::tspTriangularApproxHeuristic()
     return cost;
 }
 
-double Graph::tspCristianoRonaldo()
+void Graph::handShackLemma(vector<int> &degree)
 {
-    vector<int> degree(N, 0);
-    //!Compute MST of graph
-    buildMst(0);
-
-    //!Handshack lemma
     for (auto &v : nodes)
     {
         degree[v->id] = mst[v->id].size();
@@ -236,8 +231,36 @@ double Graph::tspCristianoRonaldo()
         else
             v->visited = true;
     }
+}
 
-    //TODO Find minimum weight perfect machting
 
+void Graph::perfectMatching(vector<int> &perfectMatching)
+{
+
+}
+
+void Graph::combine(const vector<int> &perfectMatches)
+{
+
+}
+
+void Graph::eulerianCircuit(vector<int> &eulerT)
+{
+
+}
+
+
+double Graph::tspCristianoRonaldo()
+{
+    vector<int> degree(N, 0), perfectMatches(N, INT_MIN), eulerC;
+
+    buildMst(0); //!Compute MST of graph
+    handShackLemma(degree);//!HandShack lemma
+    perfectMatching(perfectMatches); //!Find perfectMatching edges //TODO
+    combine(perfectMatches); //!Combine the edges of MST and perfectMatching //TODO
+    eulerianCircuit(eulerC); //!Form a Eulerian Circuit of combined edges //TODO
+
+    //TODO compute cost of path
     return 0.0;
 }
+
