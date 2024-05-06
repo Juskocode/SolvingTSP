@@ -40,6 +40,18 @@ void testBackTrackHeldKarp(const Graph &g, clock_t &start, clock_t &end)
     cout << "TSP tour cost: " << g.tspBackTrackingHeldKarp() << endl;
     end = clock();
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+
+    vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
+    for (int n: files)
+    {
+        Graph g;
+        string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
+        p.readOnlyEdges(g, path, n);
+        start = clock();
+        cout << "Triangle Approx " << n << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << "km" << endl;
+        end = clock();
+        cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    }
 }
 
 void testMst(Graph g)
