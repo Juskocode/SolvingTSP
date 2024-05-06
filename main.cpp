@@ -26,6 +26,13 @@ void printMstGraph(const Graph &g1)
     }
 }
 
+void testMst(Graph g)
+{
+    cout << "mst's edges g1: " << endl;
+    g.buildMst(0);
+    printMstGraph(g);
+}
+
 void testBackTrackNaive(Graph g, clock_t &start, clock_t &end)
 {
     start = clock();
@@ -34,31 +41,19 @@ void testBackTrackNaive(Graph g, clock_t &start, clock_t &end)
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
 }
 
-void testBackTrackHeldKarp(const Graph &g, clock_t &start, clock_t &end)
+void testBackTrackHeldKarp(const Parser &p, clock_t &start, clock_t &end)
 {
-    start = clock();
-    cout << "TSP tour cost: " << g.tspBackTrackingHeldKarp() << endl;
-    end = clock();
-    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-
-    vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
-    for (int n: files)
+    vector<pair<string, int>> files = {{"shipping", 14}, {"stadiums", 11}, {"tourism", 5}};
+    for (const auto &[fileName, nodes]: files)
     {
         Graph g;
-        string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
-        p.readOnlyEdges(g, path, n);
+        string path = "../Data/Toy-Graphs/" + fileName + ".csv";
+        p.readOnlyEdges(g, path, nodes);
         start = clock();
-        cout << "Triangle Approx " << n << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << "km" << endl;
+        cout << "BackTrack Approx " << nodes << ": " << g.tspBackTrackingHeldKarp() / 1e3 << "km" << endl;
         end = clock();
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     }
-}
-
-void testMst(Graph g)
-{
-    cout << "mst's edges g1: " << endl;
-    g.buildMst(0);
-    printMstGraph(g);
 }
 
 void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clock_t end)
@@ -112,11 +107,12 @@ void testRead()
 
 int main()
 {
-    //TODO ORGANIZE this shitty main into testing
+    //TODO Finally organized thi shitty main into testing
     std::cout << "Run" << '\n';
     clock_t start, end;
     Parser  p;
 
+    testBackTrackHeldKarp(p, start, end);
     testTriangularExtraFullyConnectedGraphs(p, start, end);
     testTriangularRealGraphs(p, start, end);
 
