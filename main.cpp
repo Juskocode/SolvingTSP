@@ -29,7 +29,7 @@ void printMstGraph(const Graph &g1)
 void testMst(Graph g)
 {
     cout << "mst's edges g1: " << endl;
-    g.buildMst(0);
+    g.buildMst(0, true);
     printMstGraph(g);
 }
 
