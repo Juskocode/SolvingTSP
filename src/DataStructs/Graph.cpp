@@ -204,12 +204,12 @@ void Graph::dfsMst(vector<int> &path, int src)
     }
 }
 
-double Graph::tspTriangularApproxHeuristic()
+double Graph::tspTriangularApproxHeuristic(bool connected)
 {
     vector<int> path;
     double cost = 0.0;
     //First build the mst of the graph
-    this->buildMst(0);
+    this->buildMst(0, connected);
 
     //Set all node unvisited
     for (auto node : nodes)
@@ -256,11 +256,11 @@ void Graph::eulerianCircuit(vector<int> &eulerT)
 }
 
 
-double Graph::tspCristianoRonaldo()
+double Graph::tspCristianoRonaldo(bool connected)
 {
     vector<int> degree(N, 0), perfectMatches(N, INT_MIN), eulerC;
 
-    buildMst(0); //!Compute MST of graph
+    buildMst(0, connected); //!Compute MST of graph
     handShackLemma(degree);//!HandShack lemma
     perfectMatching(perfectMatches); //!Find perfectMatching edges //TODO
     combine(perfectMatches); //!Combine the edges of MST and perfectMatching //TODO
@@ -270,14 +270,14 @@ double Graph::tspCristianoRonaldo()
     return 0.0;
 }
 
-double Graph::OneTreeLowerBound()
+double Graph::OneTreeLowerBound(bool connected)
 {
     vector<int> path;
     double cost = 0.0;
     //!ignore or remove one node
     Node* skip = nodes.back();
     nodes.pop_back();
-    buildMst(0);
+    buildMst(0, connected);
 
     //Set all node unvisited
     for (auto node : nodes)

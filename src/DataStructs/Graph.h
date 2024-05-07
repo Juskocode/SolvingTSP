@@ -195,7 +195,7 @@ public:
      * @note The cost of this approach will mainly come from Prims algorithm, as the preorder and cost computation are linear tasks
      * @return An approximation cost of the TSP tour
      * */
-    double tspTriangularApproxHeuristic();
+    double tspTriangularApproxHeuristic(bool connected);
 
     void handShackLemma(vector<int> &degree);
 
@@ -213,11 +213,11 @@ public:
     @brief Form an Eulerian circuit in H.//TODO
     @brief the circuit found in previous step into a Hamiltonian circuit by skipping repeated vertices (shortcutting).//TODO
      * */
-    double tspCristianoRonaldo();
+    double tspCristianoRonaldo(bool connected);
 
     //!build mst with N - 1 node
     //! add shortest edge from the left out node
-    double OneTreeLowerBound();
+    double OneTreeLowerBound(bool connected);
 
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
