@@ -67,11 +67,11 @@ void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clo
         string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
         p.readOnlyEdges(g, path, n);
         start = clock();
-        cost = g.tspTriangularApproxHeuristic();
+        cost = g.tspTriangularApproxHeuristic(true);
         end = clock();
         cout << "Triangle Approx " << n << ": " << cost / 1e3 << " km" << endl;
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-        cout << "Performance of cost : " << cost / g.OneTreeLowerBound() << endl;
+        cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
     }
 }
 
@@ -86,11 +86,11 @@ void testTriangularRealGraphs(const Parser &p, clock_t start, clock_t end)
         p.readEdges(g, path + "/edges.csv");
 
         start = clock();
-        cost = g.tspTriangularApproxHeuristic();
+        cost = g.tspTriangularApproxHeuristic(false);
         end = clock();
         cout << "Triangle Approx Real Graph" << i << ": " << cost / 1e3 << " km" << endl;
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-        cout << "Performance of cost : " << cost / g.OneTreeLowerBound() << endl;
+        cout << "Performance of cost : " << cost / g.OneTreeLowerBound(false) << endl;
     }
 }
 
