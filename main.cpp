@@ -50,7 +50,7 @@ void testBackTrackHeldKarp(const Parser &p, clock_t &start, clock_t &end)
         string path = "../Data/Toy-Graphs/" + fileName + ".csv";
         p.readOnlyEdges(g, path, nodes);
         start = clock();
-        cout << "BackTrack Approx " << nodes << ": " << g.tspBackTrackingHeldKarp() / 1e3 << "km" << endl;
+        cout << "BackTracking Approx " << nodes << ": " << g.tspBackTrackingHeldKarp() << " m" << endl;
         end = clock();
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     }
@@ -65,7 +65,7 @@ void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clo
         string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
         p.readOnlyEdges(g, path, n);
         start = clock();
-        cout << "Triangle Approx " << n << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << "km" << endl;
+        cout << "Triangle Approx " << n << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << " km" << endl;
         end = clock();
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     }
@@ -82,7 +82,7 @@ void testTriangularRealGraphs(const Parser &p, clock_t start, clock_t end)
         p.readEdges(g, path + "/edges.csv");
 
         start = clock();
-        cout << "Triangle Approx Real Graph" << i << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << "km" << endl;
+        cout << "Triangle Approx Real Graph" << i << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << " km" << endl;
         end = clock();
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     }
@@ -107,13 +107,15 @@ void testRead()
 
 int main()
 {
-    //TODO Finally organized thi shitty main into testing
+    //TODO Finally organized this shitty main into testing
     std::cout << "Run" << '\n';
     clock_t start, end;
     Parser  p;
 
-    testBackTrackHeldKarp(p, start, end);
-    testTriangularExtraFullyConnectedGraphs(p, start, end);
+    //testBackTrackHeldKarp(p, start, end);
+    //cout << "-----------------------------" << endl;
+    //testTriangularExtraFullyConnectedGraphs(p, start, end);
+    //cout << "-----------------------------" << endl;
     testTriangularRealGraphs(p, start, end);
 
     return 0;
