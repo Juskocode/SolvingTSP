@@ -136,7 +136,7 @@ double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vect
     return memo[pos][mask] = res;
 }
 
-void Graph::buildMst(int src)
+void Graph::buildMst(int src, bool connected)
 {
     MinHeap<Node> q;
 
@@ -165,6 +165,7 @@ void Graph::buildMst(int src)
         {
             auto node = nodes[edge->dest];
             double d = edge->weight;
+            if (node->id == v->id && !connected) continue;
             if (!node->visited && d < node->dist)
             {
                 node->dist = d;
@@ -190,6 +191,11 @@ void Graph::dfsMst(vector<int> &path, int src)
     nodes[src]->visited = true;
     path.push_back(src);
     //cout << src << endl;
+    /*sort(mst[src].begin(), mst[src].end(), [&](int i, int j)
+    {
+        if (nodes[i]->lat == nodes[j]->lat) { return nodes[i]->lon < nodes[j]->lon; }
+        return nodes[i]->lat < nodes[j]->lat;
+    });*/
     for (auto &edge : mst[src])
     {
         auto dest = nodes[edge];
@@ -262,5 +268,32 @@ double Graph::tspCristianoRonaldo()
 
     //TODO compute cost of path
     return 0.0;
+}
+
+double Graph::OneTreeLowerBound()
+{
+    vector<int> path;
+    double cost = 0.0;
+    //!ignore or remove one node
+    Node* skip = nodes.back();
+    nodes.pop_back();
+    buildMst(0);
+
+    //Set all node unvisited
+    for (auto node : nodes)
+        node->visited = false;
+
+    //Perform a dfs to get the preorder of mst of the subgraph
+    dfsMst(path, 0);
+
+    //Compute the total cost of the mst pre order
+    for (int i = 0; i < N - 2; i++)
+        cost += findDistance(path[i], path[i + 1]);
+    //Add the 2 slimmest edges from skip node;
+    sort(skip->adj.begin(), skip->adj.end(), [&](const Edge *e1, const Edge *e2){return e1->weight < e2->weight;});
+    cost += (skip->adj[0]->weight + skip->adj[1]->weight);
+
+    nodes.push_back(skip);
+    return cost;
 }
 

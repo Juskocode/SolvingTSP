@@ -160,12 +160,13 @@ public:
     /**
      * @brief Generates minimum-spanning-tree from src using Prim's algorithm
      * @param src The starting node index
+     * @param connected Indicating if the Graph is fully connected
      * <b>Complexity\n</b>
      * <pre>
      *      <b>O(|E|log|V|)</b>, E -> number of edges, V -> number of nodes
      * </pre>
      */
-    void buildMst(int src);
+    void buildMst(int src, bool connected);
 
     /**
      * @brief Generates the dfs path of the mst of the graph
@@ -213,6 +214,10 @@ public:
     @brief the circuit found in previous step into a Hamiltonian circuit by skipping repeated vertices (shortcutting).//TODO
      * */
     double tspCristianoRonaldo();
+
+    //!build mst with N - 1 node
+    //! add shortest edge from the left out node
+    double OneTreeLowerBound();
 
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
