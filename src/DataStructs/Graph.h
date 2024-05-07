@@ -180,14 +180,39 @@ public:
     void dfsMst(vector<int> &path, int src);
 
     /**
+     * @brief Solves the TSP using triangular approximation heuristic
      * @brief step1 : build mst, DONE :)
      * @brief step2 : dfs traversal, DONE :)
      * @brief step3 : Compute path DONE :)
      * @brief This heuristic approximation only works for complete graphs
      * //TODO Make this heuristic work for incomplete graphs aka real graphs
      * //TODO COMPUTE MST FOR INCOMPLETE GRAPHS
+     * <b>Complexity\n</b>
+     * <pre>
+     *      <b>O(|E|log|V|)</b>, E -> number of edges, V -> number of nodes
+     * </pre>
+     * @note The cost of this approach will mainly come from Prims algorithm, as the preorder and cost computation are linear tasks
+     * @return An approximation cost of the TSP tour
      * */
     double tspTriangularApproxHeuristic();
+
+    void handShackLemma(vector<int> &degree);
+
+    void perfectMatching(vector<int> &perfectMatches);
+
+    void combine(const vector<int> &perfectMatches);
+
+    void eulerianCircuit(vector<int> &eulerT);
+
+    /**@note Steps for Christofides algorithm
+    @brief Create a MST T of G. Done.:)
+    @brief Let O be the set of vertices with odd degree in T. By the handshaking lemma, O has an even number of vertices.//DONE :)
+    @brief Generate minimum-weight perfect matching M in the subgraph induced in G by O. //TODO
+    @brief Combine the edges of M and T to form a connected multigraph H in which each vertex has even degree.//TODO
+    @brief Form an Eulerian circuit in H.//TODO
+    @brief the circuit found in previous step into a Hamiltonian circuit by skipping repeated vertices (shortcutting).//TODO
+     * */
+    double tspCristianoRonaldo();
 
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph

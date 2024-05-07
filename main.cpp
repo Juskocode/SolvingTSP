@@ -26,6 +26,13 @@ void printMstGraph(const Graph &g1)
     }
 }
 
+void testMst(Graph g)
+{
+    cout << "mst's edges g1: " << endl;
+    g.buildMst(0);
+    printMstGraph(g);
+}
+
 void testBackTrackNaive(Graph g, clock_t &start, clock_t &end)
 {
     start = clock();
@@ -34,19 +41,19 @@ void testBackTrackNaive(Graph g, clock_t &start, clock_t &end)
     cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
 }
 
-void testBackTrackHeldKarp(const Graph &g, clock_t &start, clock_t &end)
+void testBackTrackHeldKarp(const Parser &p, clock_t &start, clock_t &end)
 {
-    start = clock();
-    cout << "TSP tour cost: " << g.tspBackTrackingHeldKarp() << endl;
-    end = clock();
-    cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-}
-
-void testMst(Graph g)
-{
-    cout << "mst's edges g1: " << endl;
-    g.buildMst(0);
-    printMstGraph(g);
+    vector<pair<string, int>> files = {{"shipping", 14}, {"stadiums", 11}, {"tourism", 5}};
+    for (const auto &[fileName, nodes]: files)
+    {
+        Graph g;
+        string path = "../Data/Toy-Graphs/" + fileName + ".csv";
+        p.readOnlyEdges(g, path, nodes);
+        start = clock();
+        cout << "BackTracking Approx " << nodes << ": " << g.tspBackTrackingHeldKarp() << " m" << endl;
+        end = clock();
+        cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+    }
 }
 
 void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clock_t end)
@@ -58,7 +65,7 @@ void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clo
         string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
         p.readOnlyEdges(g, path, n);
         start = clock();
-        cout << "Triangle Approx " << n << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << "km" << endl;
+        cout << "Triangle Approx " << n << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << " km" << endl;
         end = clock();
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     }
@@ -75,7 +82,7 @@ void testTriangularRealGraphs(const Parser &p, clock_t start, clock_t end)
         p.readEdges(g, path + "/edges.csv");
 
         start = clock();
-        cout << "Triangle Approx Real Graph" << i << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << "km" << endl;
+        cout << "Triangle Approx Real Graph" << i << ": " << (int) g.tspTriangularApproxHeuristic() / 1e3 << " km" << endl;
         end = clock();
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
     }
@@ -100,12 +107,15 @@ void testRead()
 
 int main()
 {
-    //TODO ORGANIZE this shitty main into testing
+    //TODO Finally organized this shitty main into testing
     std::cout << "Run" << '\n';
     clock_t start, end;
     Parser  p;
 
+    testBackTrackHeldKarp(p, start, end);
+    cout << "-----------------------------" << endl;
     testTriangularExtraFullyConnectedGraphs(p, start, end);
+    cout << "-----------------------------" << endl;
     testTriangularRealGraphs(p, start, end);
 
     return 0;
