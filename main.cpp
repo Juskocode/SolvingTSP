@@ -112,10 +112,10 @@ int main()
     clock_t start, end;
     Parser  p;
 
-    //testBackTrackHeldKarp(p, start, end);
-    //cout << "-----------------------------" << endl;
-    //testTriangularExtraFullyConnectedGraphs(p, start, end);
-    //cout << "-----------------------------" << endl;
+    testBackTrackHeldKarp(p, start, end);
+    cout << "-----------------------------" << endl;
+    testTriangularExtraFullyConnectedGraphs(p, start, end);
+    cout << "-----------------------------" << endl;
     testTriangularRealGraphs(p, start, end);
 
     return 0;
