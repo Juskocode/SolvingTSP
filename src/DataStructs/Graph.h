@@ -230,6 +230,8 @@ public:
      * */
     double OneTreeLowerBound(bool connected);
 
+    double computeTourCost(const vector<int> & path);
+
     int N;                          //! Number of the nodes in the graph
     std::vector<Node*> nodes;       //! Vector of the node of the graph
     std::vector<vector<int>> mst; //! Vector containing the mst edges

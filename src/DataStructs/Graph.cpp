@@ -83,6 +83,7 @@ double  Graph::tspBackTrackingNaive()
     tspBackTrackingNaive(dist, 0, visited, 0, 0, minCost);
     return minCost;
 }
+
 void  Graph::tspBackTrackingNaive(vector<vector<double>> dist, int pos, vector<bool>& visited, int count, double cost, double& minCost)
 {
     if (count == N && dist[pos][0])
@@ -207,7 +208,6 @@ void Graph::dfsMst(vector<int> &path, int src)
 double Graph::tspTriangularApproxHeuristic(bool connected)
 {
     vector<int> path;
-    double cost = 0.0;
     //First build the mst of the graph
     this->buildMst(0, connected);
 
@@ -218,13 +218,7 @@ double Graph::tspTriangularApproxHeuristic(bool connected)
     //Perform a dfs to get the preorder of mst of the graph
     dfsMst(path, 0);
 
-    //Compute the total cost of the mst pre order
-    for (int i = 0; i < N - 1; i++)
-        cost += findDistance(path[i], path[i + 1]);
-    //Connect the last Vertex to the starting node to get the TSP tour
-    cost += findDistance(path[N - 1], path[0]);
-
-    return cost;
+    return computeTourCost(path);
 }
 
 int Graph::nearest_neighbor(int src)
@@ -310,6 +304,16 @@ double Graph::OneTreeLowerBound(bool connected)
     cost += (skip->adj[0]->weight + skip->adj[1]->weight);
 
     nodes.push_back(skip);
+    return cost;
+}
+
+double Graph::computeTourCost(const vector<int> &path)
+{
+    double cost = 0.0;
+    for (int i = 0; i < N - 1; i++)
+        cost += findDistance(path[i], path[i + 1]);
+    //Connect the last Vertex to the starting node to get the TSP tour
+    cost += findDistance(path[N - 1], path[0]);
     return cost;
 }
 
