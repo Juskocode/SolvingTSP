@@ -215,8 +215,12 @@ public:
      * */
     double tspCristianoRonaldo(bool connected);
 
-    //!build mst with N - 1 node
-    //! add shortest edge from the left out node
+    /**
+     * @brief build OneTree of the Graph
+     * @note a 1Tree is a formed by building an mst without a arbitrary Vertex
+     * @note lastly we added the two shortest edges from the removed vertex to the resulting mst
+     * @param connected indicates of the graph is complete or not
+     * */
     double OneTreeLowerBound(bool connected);
 
     int N;                          //! Number of the nodes in the graph
