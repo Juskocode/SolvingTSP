@@ -227,6 +227,22 @@ double Graph::tspTriangularApproxHeuristic(bool connected)
     return cost;
 }
 
+int Graph::nearest_neighbor(int src)
+{
+    double closest = INT_MIN, distance = 0.0;
+    int node = -1;
+    for (int i = 0; i < N; i++) {
+        if (src == i || nodes[i]->visited) continue;
+        distance = findDistance(src, i);
+        if (distance < closest)
+        {
+            closest = distance;
+            node = i;
+        }
+    }
+    return node;
+}
+
 void Graph::handShackLemma(vector<int> &degree)
 {
     for (auto &v : nodes)

@@ -197,6 +197,13 @@ public:
      * */
     double tspTriangularApproxHeuristic(bool connected);
 
+    /**
+     * @brief Finds the nearest neighbor of the given node.
+     * @param src source node to find the nearest neighbor.
+     * @return nearest neighbor of src
+     */
+    int nearest_neighbor(int src);
+
     void handShackLemma(vector<int> &degree);
 
     void perfectMatching(vector<int> &perfectMatches);
