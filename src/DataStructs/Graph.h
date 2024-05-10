@@ -202,7 +202,13 @@ public:
      * @param src source node to find the nearest neighbor.
      * @return nearest neighbor of src
      */
-    int nearest_neighbor(int src);
+    int nearestNeighbor(int src);
+
+    /**
+     * @brief Solves the TSP using the nearest neighbor heuristic.
+     * @return An approximate cost of the optimal TSP tour.
+     */
+    double tspNearestNeighbor();
 
     void handShackLemma(vector<int> &degree);
 

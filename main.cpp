@@ -57,6 +57,24 @@ void testBackTrackHeldKarp(const Parser &p, clock_t &start, clock_t &end)
     }
 }
 
+void testNearestNeighborExtraFullyConnectGraphs(const Parser &p, clock_t start, clock_t end)
+{
+    vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
+    double cost = 0.0;
+    for (int n: files)
+    {
+        Graph g;
+        string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
+        p.readOnlyEdges(g, path, n);
+        start = clock();
+        cost = g.tspNearestNeighbor();
+        end = clock();
+        cout << "N.N " << n << ": " << cost / 1e3 << " km" << endl;
+        cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+        cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
+    }
+}
+
 void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clock_t end)
 {
     vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
@@ -120,11 +138,12 @@ int main()
     Graph g;
 
 
-    testBackTrackHeldKarp(p, start, end);
-    cout << "-----------------------------" << endl;
-    testTriangularExtraFullyConnectedGraphs(p, start, end);
-    cout << "-----------------------------" << endl;
-    testTriangularRealGraphs(p, start, end);
+    //testBackTrackHeldKarp(p, start, end);
+    //cout << "-----------------------------" << endl;
+    //testTriangularExtraFullyConnectedGraphs(p, start, end);
+    //cout << "-----------------------------" << endl;
+    //testTriangularRealGraphs(p, start, end);
+    testNearestNeighborExtraFullyConnectGraphs(p, start, end);
 
     return 0;
 }

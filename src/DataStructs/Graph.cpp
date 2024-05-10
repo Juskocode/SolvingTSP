@@ -54,7 +54,7 @@ double Graph::haversineDistanceGeneric(double lat1, double lon1, double lat2, do
     double a = std::sin(dLat / 2) * std::sin(dLat / 2) +
                std::sin(dLon / 2) * std::sin(dLon / 2) * std::cos(lat1) * std::cos(lat2);
 
-    double rad = 6371; // Earth's radius in kilometers
+    double rad = 6371000; // Earth's radius in kilometers
     double c = 2 * std::asin(std::sqrt(a));
     return rad * c;
 }
@@ -221,11 +221,11 @@ double Graph::tspTriangularApproxHeuristic(bool connected)
     return computeTourCost(path);
 }
 
-int Graph::nearest_neighbor(int src)
+int Graph::nearestNeighbor(int src)
 {
-    double closest = INT_MIN, distance = 0.0;
+    double closest = 1e11, distance;
     int node = -1;
-    for (int i = 0; i < N; i++) {
+    for (int i = 1; i < N; i++) {
         if (src == i || nodes[i]->visited) continue;
         distance = findDistance(src, i);
         if (distance < closest)
@@ -235,6 +235,25 @@ int Graph::nearest_neighbor(int src)
         }
     }
     return node;
+}
+
+double Graph::tspNearestNeighbor()
+{
+    for (int i = 0; i < N; i++)
+        nodes[i]->visited = false;
+
+    vector<int> path(N);
+    path[0] = 0;
+    nodes[0]->visited = true;
+
+    for (int i = 1; i < N; i++)
+    {
+        int nn = nearestNeighbor(path[i - 1]);
+        path[i] = nn;
+        nodes[nn]->visited = true;
+    }
+
+    return computeTourCost(path);
 }
 
 void Graph::handShackLemma(vector<int> &degree)
@@ -316,4 +335,3 @@ double Graph::computeTourCost(const vector<int> &path)
     cost += findDistance(path[N - 1], path[0]);
     return cost;
 }
-
