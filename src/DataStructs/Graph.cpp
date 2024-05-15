@@ -64,7 +64,7 @@ double Graph::findDistance(int src, int dst)
     for (auto &edge: nodes[src]->adj)
         if (edge->dest == dst)
             return edge->weight;
-    return haversineDistanceGeneric(nodes[src]->lat, nodes[src]->lon, nodes[dst]->lat, nodes[dst]->lon);
+    return -1e11;//haversineDistanceGeneric(nodes[src]->lat, nodes[src]->lon, nodes[dst]->lat, nodes[dst]->lon);
 }
 
 double  Graph::tspBackTrackingNaive()
