@@ -318,18 +318,37 @@ void Graph::eulerianCircuit(vector<int> &eulerT)
     reverse(eulerT.begin(), eulerT.end());
 }
 
+double Graph::shortcuttingCost(vector<int> &eulerC)
+{
+    double cost = 0.0;
+    vector<bool> visited(N, false);
+    visited[eulerC[0]] = true;
+
+    for (int i = 0; i < eulerC.size() - 1; i++)
+    {
+        if (!visited[eulerC[i + 1]])
+        {
+            cost += findDistance(eulerC[i], eulerC[i + 1]);
+            visited[eulerC[i + 1]] = true;
+        }
+    }
+
+    cost += findDistance(eulerC.back(), eulerC[0]);
+    return cost;
+}
 
 double Graph::tspChristofides(bool connected) {
     vector<int> degree(N, 0), perfectMatches(N, INT_MIN), eulerC;
 
     buildMst(0, connected); //!Compute MST of graph
     handShackLemma(degree);//!HandShack lemma
-    perfectMatching(perfectMatches); //!Find perfectMatching edges //TODO
-    combine(perfectMatches); //!Combine the edges of MST and perfectMatching //TODO
-    eulerianCircuit(eulerC); //!Form a Eulerian Circuit of combined edges //TODO
+    perfectMatching(perfectMatches); //!Find perfectMatching edges
+    combine(perfectMatches); //!Combine the edges of MST and perfectMatching
+    eulerianCircuit(eulerC); //!Form a Eulerian Circuit of combined edges
 
-    //TODO compute cost of path
-    return 0.0;
+    /// Computes the cost to the Tour by skipping repeated edges
+    /// transforming the Circuit into Hamiltonian
+    return shortcuttingCost(eulerC);
 }
 
 double Graph::OneTreeLowerBound(bool connected)
@@ -368,3 +387,5 @@ double Graph::computeTourCost(const vector<int> &path)
     cost += findDistance(path[N - 1], path[0]);
     return cost;
 }
+
+

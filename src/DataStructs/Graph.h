@@ -246,6 +246,7 @@ public:
          * @param eulerC the eulerian Cicuit to convert
          * @return the cost of the resulting shortcutting
          * */
+         double shortcuttingCost(vector<int> &eulerC);
 
         /**@note Steps for Christofides algorithm
         @brief Create a MST T of G. Done.:)
