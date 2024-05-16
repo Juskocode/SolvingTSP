@@ -221,7 +221,7 @@ double Graph::tspTriangularApproxHeuristic(bool connected)
     return computeTourCost(path);
 }
 
-int Graph::nearestNeighbor(int src)
+int Graph::findNearestNeighbor(int src)
 {
     double closest = 1e11, distance;
     int node = -1;
@@ -248,7 +248,7 @@ double Graph::tspNearestNeighbor()
 
     for (int i = 1; i < N; i++)
     {
-        int nn = nearestNeighbor(path[i - 1]);
+        int nn = findNearestNeighbor(path[i - 1]);
         path[i] = nn;
         nodes[nn]->visited = true;
     }
@@ -271,22 +271,55 @@ void Graph::handShackLemma(vector<int> &degree)
 
 void Graph::perfectMatching(vector<int> &perfectMatching)
 {
-
+    for (auto &node: nodes)
+    {
+        int v = node->id;
+        if (node->visited || perfectMatching[v] != -1) continue;
+        int nearest = findNearestNeighbor(v);
+        perfectMatching[v] = nearest;
+        perfectMatching[nearest] = v;
+        node->visited = true;
+        nodes[nearest]->visited = true;
+    }
 }
 
 void Graph::combine(const vector<int> &perfectMatches)
 {
-
+    for (int i = 0; i < N; i++)
+    {
+        if (perfectMatches[i] == -1) continue;
+        mst[i].push_back(perfectMatches[i]);
+    }
 }
 
 void Graph::eulerianCircuit(vector<int> &eulerT)
 {
+    stack<int> s;
+    s.push(0);
 
+    while (!s.empty())
+    {
+        int u = s.top();
+
+        if (mst[u].empty())
+        {
+            s.pop();
+            eulerT.push_back(u);
+        }
+        else // back track to remaining circuit
+        {
+            Node* v = nodes[*mst[u].begin()];
+            mst[u].erase(mst[u].begin());
+            mst[v->id].erase(std::find(mst[v->id].begin(), mst[v->id].end(), u));
+            s.push(v->id);
+        }
+    }
+
+    reverse(eulerT.begin(), eulerT.end());
 }
 
 
-double Graph::tspCristianoRonaldo(bool connected)
-{
+double Graph::tspChristofides(bool connected) {
     vector<int> degree(N, 0), perfectMatches(N, INT_MIN), eulerC;
 
     buildMst(0, connected); //!Compute MST of graph
