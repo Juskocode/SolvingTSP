@@ -85,7 +85,7 @@ void testChristofidesExtraFullyConnectGraphs(const Parser &p, clock_t start, clo
         start = clock();
         cost = g.tspChristofides(true);
         end = clock();
-        cout << "N.N " << n << ": " << cost / 1e3 << " km" << endl;
+        cout << "Christofides Tour cost " << n << ": " << cost / 1e3 << " km" << endl;
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
         cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
     }
