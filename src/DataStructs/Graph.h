@@ -211,7 +211,7 @@ public:
         double tspNearestNeighbor();
 
         /**
-         * @brief Performs handSachkLemma in the graph, assuring a possible eulerian circuit.
+         * @brief Performs handSachkLemma in the graph, gets the odd vertices of the graph.
          * @param degree Stores the degrees.
          */
         void handShackLemma(vector<int> &degree);
@@ -249,7 +249,7 @@ public:
          double shortcuttingCost(vector<int> &eulerC);
 
         /**@note Steps for Christofides algorithm
-        @brief Create a MST T of G. Done.:)
+        @brief Create a MST T of G.
         @brief Let O be the set of vertices with odd degree in T. By the handshaking lemma, O has an even number of vertices.
         @brief Generate minimum-weight perfect matching M in the subgraph induced in G by O.
         @brief Combine the edges of M and T to form a connected multigraph H in which each vertex has even degree.

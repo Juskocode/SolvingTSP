@@ -64,7 +64,7 @@ double Graph::findDistance(int src, int dst)
     for (auto &edge: nodes[src]->adj)
         if (edge->dest == dst)
             return edge->weight;
-    return -1e11;//haversineDistanceGeneric(nodes[src]->lat, nodes[src]->lon, nodes[dst]->lat, nodes[dst]->lon);
+    return haversineDistanceGeneric(nodes[src]->lat, nodes[src]->lon, nodes[dst]->lat, nodes[dst]->lon);
 }
 
 double  Graph::tspBackTrackingNaive()
@@ -274,7 +274,7 @@ void Graph::perfectMatching(vector<int> &perfectMatching)
     for (auto &node: nodes)
     {
         int v = node->id;
-        if (node->visited || perfectMatching[v] != -1) continue;
+        if (node->visited || perfectMatching[v] != INT_MIN) continue;
         int nearest = findNearestNeighbor(v);
         perfectMatching[v] = nearest;
         perfectMatching[nearest] = v;
@@ -287,7 +287,7 @@ void Graph::combine(const vector<int> &perfectMatches)
 {
     for (int i = 0; i < N; i++)
     {
-        if (perfectMatches[i] == -1) continue;
+        if (perfectMatches[i] == INT_MIN) continue;
         mst[i].push_back(perfectMatches[i]);
     }
 }
@@ -337,7 +337,8 @@ double Graph::shortcuttingCost(vector<int> &eulerC)
     return cost;
 }
 
-double Graph::tspChristofides(bool connected) {
+double Graph::tspChristofides(bool connected)
+{
     vector<int> degree(N, 0), perfectMatches(N, INT_MIN), eulerC;
 
     buildMst(0, connected); //!Compute MST of graph
