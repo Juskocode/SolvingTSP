@@ -77,11 +77,14 @@ void testChristofidesExtraFullyConnectGraphs(const Parser &p, clock_t start, clo
 {
     vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
     double cost = 0.0;
+    int startId = 0;
     for (int n: files)
     {
         Graph g;
         string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
         p.readOnlyEdges(g, path, n);
+        cout << "Enter a Vertex to start the Tour : 1 - " + to_string(n) << endl;
+        cin >> startId;
         start = clock();
         cost = g.tspChristofides(true);
         end = clock();
@@ -94,13 +97,15 @@ void testChristofidesExtraFullyConnectGraphs(const Parser &p, clock_t start, clo
 void testChristofidesRealGraphs(const Parser &p, clock_t start, clock_t end)
 {
     double cost = 0.0;
+    int startId = 0;
     for (int i = 1; i < 4; i++)
     {
         Graph g;
         string path = "../Data/Real_world_Graphs/graph" + to_string(i);
         p.readNodes(g, path + "/nodes.csv");
         p.readEdges(g, path + "/edges.csv");
-
+        cout << "Enter a Vertex to start the Tour : 1 - " + to_string(g.nodes.size()) << endl;
+        cin >> startId;
         start = clock();
         cost = g.tspChristofides(false);
         end = clock();
@@ -152,13 +157,15 @@ void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clo
 void testTriangularRealGraphs(const Parser &p, clock_t start, clock_t end)
 {
     double cost = 0.0;
+    int startId = 0;
     for (int i = 1; i < 4; i++)
     {
         Graph g;
         string path = "../Data/Real_world_Graphs/graph" + to_string(i);
         p.readNodes(g, path + "/nodes.csv");
         p.readEdges(g, path + "/edges.csv");
-
+        cout << "Enter a Vertex to start the Tour : 1 - " + to_string(g.nodes.size()) << endl;
+        cin >> startId;
         start = clock();
         cost = g.tspTriangularApproxHeuristic(false);
         end = clock();
@@ -192,6 +199,8 @@ int main()
     clock_t start, end;
     Parser  p;
     Graph g;
+
+    bool VertexChoosing = false;
 
 
     //testBackTrackHeldKarp(p, start, end);
