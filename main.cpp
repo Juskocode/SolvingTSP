@@ -132,13 +132,16 @@ void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clo
 {
     vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
     double cost = 0.0;
+    int startId = 0;
     for (int n: files)
     {
         Graph g;
         string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
         p.readOnlyEdges(g, path, n);
+        cout << "Enter a Vertex to start the Tour : 1 - " + to_string(n) << endl;
+        cin >> startId;
         start = clock();
-        cost = g.tspTriangularApproxHeuristic(true);
+        cost = g.tspTriangularApproxHeuristic(true, startId);
         end = clock();
         cout << "Triangle Approx " << n << ": " << cost / 1e3 << " km" << endl;
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
@@ -193,8 +196,8 @@ int main()
 
     //testBackTrackHeldKarp(p, start, end);
     //cout << "-----------------------------" << endl;
-    testChristofidesExtraFullyConnectGraphs(p, start, end);
-    //testTriangularExtraFullyConnectedGraphs(p, start, end);
+    //testChristofidesExtraFullyConnectGraphs(p, start, end);
+    testTriangularExtraFullyConnectedGraphs(p, start, end);
     //cout << "-----------------------------" << endl;
     //testTriangularRealGraphs(p, start, end);
     //testNearestNeighborExtraFullyConnectGraphs(p, start, end);
