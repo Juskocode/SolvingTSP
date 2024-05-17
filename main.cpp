@@ -57,7 +57,7 @@ void testBackTrackHeldKarp(const Parser &p, clock_t &start, clock_t &end)
     }
 }
 
-void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clock_t end)
+void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clock_t end, bool choose = false)
 {
     vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
     double cost = 0.0;
@@ -67,8 +67,11 @@ void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clo
         Graph g;
         string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
         p.readOnlyEdges(g, path, n);
-        cout << "Enter a Vertex to start the Tour : 1 - " + to_string(n) << endl;
-        cin >> startId;
+        if (choose)
+        {
+            cout << "Enter a Vertex to start the Tour : 1 - " + to_string(n) << endl;
+            cin >> startId;
+        }
         start = clock();
         cost = g.tspTriangularApproxHeuristic(true, startId);
         end = clock();
@@ -78,7 +81,7 @@ void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clo
     }
 }
 
-void testTriangularRealGraphs(const Parser &p, clock_t start, clock_t end)
+void testTriangularRealGraphs(const Parser &p, clock_t start, clock_t end, bool choose = false)
 {
     double cost = 0.0;
     int startId = 0;
@@ -88,8 +91,11 @@ void testTriangularRealGraphs(const Parser &p, clock_t start, clock_t end)
         string path = "../Data/Real_world_Graphs/graph" + to_string(i);
         p.readNodes(g, path + "/nodes.csv");
         p.readEdges(g, path + "/edges.csv");
-        cout << "Enter a Vertex to start the Tour : 1 - " + to_string(g.nodes.size()) << endl;
-        cin >> startId;
+        if (choose)
+        {
+            cout << "Enter a Vertex to start the Tour : 1 - " + to_string(g.nodes.size()) << endl;
+            cin >> startId;
+        }
         start = clock();
         cost = g.tspTriangularApproxHeuristic(false, startId);
         end = clock();
@@ -115,7 +121,7 @@ void testChristofidesToyGraphs(const Parser &p, clock_t &start, clock_t &end)
     }
 }
 
-void testChristofidesExtraFullyConnectGraphs(const Parser &p, clock_t start, clock_t end)
+void testChristofidesExtraFullyConnectGraphs(const Parser &p, clock_t start, clock_t end, bool choose = false)
 {
     vector<int> files = {25, 50, 75, 100, 200, 300, 400, 500, 600, 700, 800, 900};
     double cost = 0.0;
@@ -125,8 +131,11 @@ void testChristofidesExtraFullyConnectGraphs(const Parser &p, clock_t start, clo
         Graph g;
         string path = "../Data/Extra_Fully_Connected_Graphs/edges_" + to_string(n) + ".csv";
         p.readOnlyEdges(g, path, n);
-        cout << "Enter a Vertex to start the Tour : 1 - " + to_string(n) << endl;
-        cin >> startId;
+        if (choose)
+        {
+            cout << "Enter a Vertex to start the Tour : 1 - " + to_string(n) << endl;
+            cin >> startId;
+        }
         start = clock();
         cost = g.tspChristofides(true, startId);
         end = clock();
@@ -136,7 +145,7 @@ void testChristofidesExtraFullyConnectGraphs(const Parser &p, clock_t start, clo
     }
 }
 
-void testChristofidesRealGraphs(const Parser &p, clock_t start, clock_t end)
+void testChristofidesRealGraphs(const Parser &p, clock_t start, clock_t end, bool choose = false)
 {
     double cost = 0.0;
     int startId = 0;
@@ -146,8 +155,11 @@ void testChristofidesRealGraphs(const Parser &p, clock_t start, clock_t end)
         string path = "../Data/Real_world_Graphs/graph" + to_string(i);
         p.readNodes(g, path + "/nodes.csv");
         p.readEdges(g, path + "/edges.csv");
-        cout << "Enter a Vertex to start the Tour : 1 - " + to_string(g.nodes.size()) << endl;
-        cin >> startId;
+        if (choose)
+        {
+            cout << "Enter a Vertex to start the Tour : 1 - " + to_string(g.nodes.size()) << endl;
+            cin >> startId;
+        }
         start = clock();
         cost = g.tspChristofides(false, startId);
         end = clock();
@@ -200,7 +212,6 @@ int main()
     Parser  p;
     Graph g;
 
-    bool VertexChoosing = false;
 
 
     //testBackTrackHeldKarp(p, start, end);
@@ -208,7 +219,8 @@ int main()
     //testChristofidesExtraFullyConnectGraphs(p, start, end);
     //testTriangularExtraFullyConnectedGraphs(p, start, end);
     //cout << "-----------------------------" << endl;
-    testTriangularRealGraphs(p, start, end);
+    //testTriangularRealGraphs(p, start, end);
+    testChristofidesRealGraphs(p, start, end);
     //testNearestNeighborExtraFullyConnectGraphs(p, start, end);
 
     return 0;
