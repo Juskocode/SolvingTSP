@@ -10,8 +10,12 @@ void Parser::readNodes(Graph &g, const std::string &path) const
     ifstream nodes(path);
     string line, x;
     //!in the real graphs data will be added in the first line the number of nodes
-    int N = 0;
-    g = Graph(N);
+    getline(nodes, line);
+    stringstream ss(line);
+    int N;
+    ss >> N;
+    ss.ignore();
+   g = Graph(N);
     int id;
     double lat, lon;
     getline(nodes, line); // skip first line
