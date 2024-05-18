@@ -5,9 +5,9 @@
  */
 
 #ifndef SOLVINGTSP_GRAPH_H
-#define SOLVINGTSP_GRAPH_H
+#define SOLVINGTSP_GRAPH_h
 
-#include "vector"
+#include <bits/stdc++.h>
 #include "minHeap.h"
 #define ull unsigned long long
 
@@ -159,7 +159,7 @@ public:
 
         /**
          * @brief Generates minimum-spanning-tree from src using Prim's algorithm
-         * @param src The starting node index
+         * @param src The node index
          * @param connected Indicating if the Graph is fully connected
          * <b>Complexity\n</b>
          * <pre>
@@ -176,7 +176,7 @@ public:
         /**
          * @brief Helper function of dfsMst
          * @param path Stores the dfs traversal of the mst
-         * @param src The starting node index
+         * @param src The node index
          * */
         void dfsMst(vector<int> &path, int src);
 
@@ -186,8 +186,8 @@ public:
          * @brief step2 : dfs traversal, DONE :)
          * @brief step3 : Compute path DONE :)
          * @brief This heuristic approximation only works for complete graphs
-         * //TODO Make this heuristic work for incomplete graphs aka real graphs
-         * //TODO COMPUTE MST FOR INCOMPLETE GRAPHS
+         * @param connected indicates of the graph is complete or not
+         * @param startid indicates the starting vertice of the TSP tour
          * <b>Complexity\n</b>
          * <pre>
          *      <b>O(|E|log|V|)</b>, E -> number of edges, V -> number of nodes
@@ -195,7 +195,7 @@ public:
          * @note The cost of this approach will mainly come from Prims algorithm, as the preorder and cost computation are linear tasks
          * @return An approximation cost of the TSP tour
          * */
-        double tspTriangularApproxHeuristic(bool connected, int src = 0);
+        double tspTriangularApproxHeuristic(bool connected,const int &startid = 0);
 
         /**
          * @brief Finds the nearest neighbor of the given node.
@@ -233,12 +233,13 @@ public:
         /**
          * @brief Computes an eulerian circuit of the Graph using Hierholzer’s Algorithm
          * @param eulerT represents the euler Circuit of the Graph
+         * @param startId indicates the starting vertice of the TSP tour
          * <b>Complexity\n</b>
          * <pre>
          *      <b>O(V + E)</b>, E -> number of edges, V -> number of nodes
          * </pre>
          */
-        void eulerianCircuit(vector<int> &eulerT);
+        void eulerianCircuit(vector<int> &eulerT, const int &startId);
 
         /**
          * @brief Transforms the eulerian Circuit into a Hamilton circuit by skipping repeated vertices, and computes the cost
@@ -256,9 +257,10 @@ public:
         @brief Form an Eulerian circuit in H.
         @brief Transforms the circuit found in previous step into a Hamiltonian circuit by skipping repeated vertices (shortcutting).
          @param connected indicates of the graph is complete or not
+         @param startid indicates the starting vertice of the TSP tour
          @return An approximation cost of the TSP tour
          * */
-        double tspChristofides(bool connected, int src = 0);
+        double tspChristofides(bool connected, const int &startid = 0);
 
         /**
          * @brief build OneTree of the Graph

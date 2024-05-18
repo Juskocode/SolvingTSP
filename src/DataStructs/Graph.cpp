@@ -1,6 +1,4 @@
 #include "Graph.h"
-#include "stack"
-#include "algorithm"
 
 
 Edge::Edge(int dest, double w) : dest(dest), weight(w) {}
@@ -121,8 +119,8 @@ double Graph::tspBackTrackingHeldKarp() const
     return tspBackTrackingHeldKarp(0, 1, memo, dist);
 }
 
-double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vector<vector<double>> &memo,
-                                      const vector<vector<double>> &dist) const {
+double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vector<vector<double>> &memo, const vector<vector<double>> &dist) const
+{
     if (memo[pos][mask] != -1) return memo[pos][mask];
 
     double res = INT_MAX;
@@ -207,18 +205,18 @@ void Graph::dfsMst(vector<int> &path, int src)
     }
 }
 
-double Graph::tspTriangularApproxHeuristic(bool connected, int src)
+double Graph::tspTriangularApproxHeuristic(bool connected, const int &startId)
 {
     vector<int> path;
     //First build the mst of the graph
-    this->buildMst(src, connected);
+    this->buildMst(startId, connected);
 
     //Set all node unvisited
     for (auto node : nodes)
         node->visited = false;
 
     //Perform a dfs to get the preorder of mst of the graph
-    dfsMst(path, 0);
+    dfsMst(path, startId);
 
     return computeTourCost(path);
 }
@@ -294,10 +292,10 @@ void Graph::combine(const vector<int> &perfectMatches)
     }
 }
 
-void Graph::eulerianCircuit(vector<int> &eulerT)
+void Graph::eulerianCircuit(vector<int> &eulerT, const int &startId)
 {
     stack<int> s;
-    s.push(0);
+    s.push(startId);
 
     while (!s.empty())
     {
@@ -339,15 +337,15 @@ double Graph::shortcuttingCost(vector<int> &eulerC)
     return cost;
 }
 
-double Graph::tspChristofides(bool connected, int src)
+double Graph::tspChristofides(bool connected, const int &startId)
 {
     vector<int> degree(N, 0), perfectMatches(N, INT_MIN), eulerC;
 
-    buildMst(src, connected); //!Compute MST of graph
+    buildMst(startId, connected); //!Compute MST of graph
     handShackLemma(degree);//!HandShack lemma
     perfectMatching(perfectMatches); //!Find perfectMatching edges
     combine(perfectMatches); //!Combine the edges of MST and perfectMatching
-    eulerianCircuit(eulerC); //!Form a Eulerian Circuit of combined edges
+    eulerianCircuit(eulerC, startId); //!Form a Eulerian Circuit of combined edges
 
     /// Computes the cost to the Tour by skipping repeated edges
     /// transforming the Circuit into Hamiltonian
