@@ -5,9 +5,9 @@
  */
 
 #ifndef SOLVINGTSP_GRAPH_H
-#define SOLVINGTSP_GRAPH_h
+#define SOLVINGTSP_GRAPH_H
 
-#include <bits/stdc++.h>
+#include "vector"
 #include "minHeap.h"
 #define ull unsigned long long
 
@@ -195,7 +195,7 @@ public:
          * @note The cost of this approach will mainly come from Prims algorithm, as the preorder and cost computation are linear tasks
          * @return An approximation cost of the TSP tour
          * */
-        double tspTriangularApproxHeuristic(bool connected);
+        double tspTriangularApproxHeuristic(bool connected, int src = 0);
 
         /**
          * @brief Finds the nearest neighbor of the given node.
@@ -258,7 +258,7 @@ public:
          @param connected indicates of the graph is complete or not
          @return An approximation cost of the TSP tour
          * */
-        double tspChristofides(bool connected);
+        double tspChristofides(bool connected, int src = 0);
 
         /**
          * @brief build OneTree of the Graph

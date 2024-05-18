@@ -1,5 +1,7 @@
 #include "Parser.h"
-
+#include "fstream"
+#include "sstream"
+#include "stack"
 
 Parser::Parser() = default;
 
@@ -8,11 +10,7 @@ void Parser::readNodes(Graph &g, const std::string &path) const
     ifstream nodes(path);
     string line, x;
     //!in the real graphs data will be added in the first line the number of nodes
-    getline(nodes, line);
-    stringstream ss(line);
-    int N;
-    ss >> N;
-    ss.ignore();
+    int N = 0;
     g = Graph(N);
     int id;
     double lat, lon;
@@ -29,6 +27,9 @@ void Parser::readNodes(Graph &g, const std::string &path) const
         lon = std::stod(x);
         g.nodes.emplace_back(new Node(id, lat, lon));
     }
+
+    g.N = g.nodes.size();
+    g.mst.resize(g.N);
 }
 
 void Parser::readEdges(Graph &g, const std::string &path) const

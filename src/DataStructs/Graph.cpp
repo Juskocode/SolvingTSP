@@ -1,4 +1,6 @@
 #include "Graph.h"
+#include "stack"
+#include "algorithm"
 
 
 Edge::Edge(int dest, double w) : dest(dest), weight(w) {}
@@ -205,11 +207,11 @@ void Graph::dfsMst(vector<int> &path, int src)
     }
 }
 
-double Graph::tspTriangularApproxHeuristic(bool connected)
+double Graph::tspTriangularApproxHeuristic(bool connected, int src)
 {
     vector<int> path;
     //First build the mst of the graph
-    this->buildMst(0, connected);
+    this->buildMst(src, connected);
 
     //Set all node unvisited
     for (auto node : nodes)
@@ -337,11 +339,11 @@ double Graph::shortcuttingCost(vector<int> &eulerC)
     return cost;
 }
 
-double Graph::tspChristofides(bool connected)
+double Graph::tspChristofides(bool connected, int src)
 {
     vector<int> degree(N, 0), perfectMatches(N, INT_MIN), eulerC;
 
-    buildMst(0, connected); //!Compute MST of graph
+    buildMst(src, connected); //!Compute MST of graph
     handShackLemma(degree);//!HandShack lemma
     perfectMatching(perfectMatches); //!Find perfectMatching edges
     combine(perfectMatches); //!Combine the edges of MST and perfectMatching

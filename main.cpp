@@ -182,22 +182,419 @@ void testRead()
     printGraph(g3);
 }
 
+enum InterfaceState {
+    DATASET_SELECTION,
+    TOY_SELECTION,
+    REAL_SELECTION,
+    EXTRA_SELECTION,
+    OPERATION_SELECTION,
+    QUIT
+};
+
+enum LoadedGraph {
+    NONE,
+    TOY,
+    REAL,
+    EXTRA
+};
+
+std::string err;
+
+std::string repeat_string(std::string string, int n) {
+    if (n <= 0) return "";
+
+    std::string s;
+    for (size_t i = 0; i < n; i++) {
+        s += string;
+    }
+
+    return s;
+}
+
+std::string top_line() {
+    return "┌" + repeat_string("─", 78) + "┐\n";
+}
+
+std::string line_with_content(const std::string& content, int to_ignore = 0) {
+    std::string line = "│";
+    line += content;
+
+    if (line.length() <= 81 + to_ignore) {
+        int missing_whitespace = 80 + to_ignore - line.length();
+        line += repeat_string(" ", missing_whitespace + 1);
+        line += "│";
+    }
+
+    return line + '\n';
+}
+
+std::string middle_line() {
+    return "├" + repeat_string("─", 78) + "┤\n";
+}
+
+std::string bottom_line() {
+    return "└" + repeat_string("─", 78) + "┘\n";
+}
+
+int read_input() {
+    std::string input;
+    std::getline(std::cin, input);
+    int num = -1;
+
+    try {
+        num = std::stoi(input);
+    } catch (const std::invalid_argument& e) {
+        err = std::string(e.what());
+    } catch (const std::out_of_range& e) {
+        err = std::string(e.what());
+    }
+
+    return num;
+}
+
+
+InterfaceState dataset_selection() {
+    std::cout << top_line()
+    << line_with_content("   Choose the dataset")
+    << line_with_content(" \033[32m[1]\033[0m Toy Graphs", 9)
+    << line_with_content(" \033[33m[2]\033[0m Extra Fully Connected Graphs", 9)
+    << line_with_content(" \033[34m[3]\033[0m Real World Graphs", 9)
+    << line_with_content("")
+    << line_with_content(" \033[31m[0]\033[0m Quit", 9)
+    << bottom_line();
+
+    int num = read_input();
+
+    switch (num) {
+        case 0:
+            return QUIT;
+        case 1:
+            return TOY_SELECTION;
+        case 2:
+            return EXTRA_SELECTION;
+        case 3:
+            return REAL_SELECTION;
+        default:
+            err = "invalid selection";
+            return DATASET_SELECTION;
+    }
+};
+
+InterfaceState toy_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
+    std::cout << top_line()
+              << line_with_content("   Choose the dataset")
+              << line_with_content(" \033[32m[1]\033[0m Toy Graphs: Shipping", 9)
+              << line_with_content(" \033[32m[2]\033[0m Toy Graphs: Stadiums", 9)
+              << line_with_content(" \033[32m[3]\033[0m Toy Graphs: Tourism", 9)
+              << line_with_content("")
+              << line_with_content(" \033[31m[0]\033[0m Back", 9)
+              << bottom_line();
+
+    int num = read_input();
+    int nodes;
+    string path;
+
+    switch (num) {
+        case 0: // back
+            return DATASET_SELECTION;
+        case 1: //shipping
+            path = "../Data/Toy-Graphs/shipping.csv";
+            nodes = 14;
+            break;
+        case 2: //stadiums
+            path = "../Data/Toy-Graphs/stadiums.csv";
+            nodes = 11;
+            break;
+        case 3: //tourism
+            path = "../Data/Toy-Graphs/tourism.csv";
+            nodes = 5;
+            break;
+        default: //invalid
+            err = "invalid selection";
+            return TOY_SELECTION;
+    }
+
+    p.readOnlyEdges(g, path, nodes);
+    loaded = TOY;
+    return OPERATION_SELECTION;
+}
+
+InterfaceState real_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
+    std::cout << top_line()
+              << line_with_content("   Choose the dataset")
+              << line_with_content(" \033[34m[1]\033[0m Real World Graphs: 1", 9)
+              << line_with_content(" \033[34m[2]\033[0m Real World Graphs: 2", 9)
+              << line_with_content(" \033[34m[3]\033[0m Real World Graphs: 3", 9)
+              << line_with_content("")
+              << line_with_content(" \033[31m[0]\033[0m Back", 9)
+              << bottom_line();
+
+    int num = read_input();
+    string path;
+
+    switch (num) {
+        case 0: // back
+            return DATASET_SELECTION;
+        case 1: //real 1
+            path = "../Data/Real_world_Graphs/graph1";
+            break;
+        case 2: //real 2
+            path = "../Data/Real_world_Graphs/graph2";
+            break;
+        case 3: //real 3
+            path = "../Data/Real_world_Graphs/graph3";
+            break;
+        default: //invalid
+            err = "invalid selection";
+            return REAL_SELECTION;
+    }
+
+    p.readNodes(g, path + "/nodes.csv");
+    p.readEdges(g, path + "/edges.csv");
+    loaded = REAL;
+    return OPERATION_SELECTION;
+}
+
+InterfaceState extra_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
+    std::cout << top_line()
+              << line_with_content("   Choose the dataset")
+              << line_with_content(" \033[33m[1]\033[0m Extra Fully Connected Graphs: 25", 9)
+              << line_with_content(" \033[33m[2]\033[0m Extra Fully Connected Graphs: 50", 9)
+              << line_with_content(" \033[33m[3]\033[0m Extra Fully Connected Graphs: 75", 9)
+              << line_with_content(" \033[33m[4]\033[0m Extra Fully Connected Graphs: 100", 9)
+              << line_with_content(" \033[33m[5]\033[0m Extra Fully Connected Graphs: 200", 9)
+              << line_with_content(" \033[33m[6]\033[0m Extra Fully Connected Graphs: 300", 9)
+              << line_with_content(" \033[33m[7]\033[0m Extra Fully Connected Graphs: 400", 9)
+              << line_with_content(" \033[33m[8]\033[0m Extra Fully Connected Graphs: 500", 9)
+              << line_with_content(" \033[33m[9]\033[0m Extra Fully Connected Graphs: 600", 9)
+              << line_with_content(" \033[33m[10]\033[0m Extra Fully Connected Graphs: 700", 9)
+              << line_with_content(" \033[33m[11]\033[0m Extra Fully Connected Graphs: 800", 9)
+              << line_with_content(" \033[33m[12]\033[0m Extra Fully Connected Graphs: 900", 9)
+              << line_with_content("")
+              << line_with_content(" \033[31m[0]\033[0m Back", 9)
+              << bottom_line();
+
+    int num = read_input();
+    int nodes;
+    string path = "../Data/Extra_Fully_Connected_Graphs/edges_";
+
+    switch (num) {
+        case 0: // back
+            return DATASET_SELECTION;
+        case 1: //extra 25
+            nodes = 25;
+            break;
+        case 2: //extra 50
+            nodes = 50;
+            break;
+        case 3: //extra 75
+            nodes = 75;
+            break;
+        case 4: //extra 100
+            nodes = 100;
+            break;
+        case 5: //extra 200
+            nodes = 200;
+            break;
+        case 6: //extra 300
+            nodes = 300;
+            break;
+        case 7: //extra 400
+            nodes = 400;
+            break;
+        case 8: //extra 500
+            nodes = 500;
+            break;
+        case 9: //extra 600
+            nodes = 600;
+            break;
+        case 10: //extra 700
+            nodes = 700;
+            break;
+        case 11: //extra 800
+            nodes = 800;
+            break;
+        case 12: //extra 900
+            nodes = 900;
+            break;
+        default: //invalid
+            err = "invalid selection";
+            return EXTRA_SELECTION;
+    }
+
+    p.readOnlyEdges(g, path += std::to_string(nodes) + ".csv", nodes);
+    loaded = EXTRA;
+    return OPERATION_SELECTION;
+}
+
+void print_algorith_information(std::string name, double time, double cost) {
+    std::cout << top_line()
+    << line_with_content("Algorithm: " + name)
+    << line_with_content("Time: " + std::to_string(time))
+    << line_with_content("Cost: " + std::to_string(cost / 1e3) + " km")
+    << line_with_content("")
+    << line_with_content("Press any key...")
+    << bottom_line();
+
+    std::getchar();
+}
+
+InterfaceState operation_selection(Graph &g, LoadedGraph &loaded) {
+    std::cout << top_line()
+              << line_with_content("    Choose the operation:");
+
+    switch (loaded) {
+        case TOY:
+            std::cout << line_with_content(" \033[32m[1]\033[0m Backtracking Algorithm", 9)
+            << line_with_content(" \033[32m[2]\033[0m Held-Karp Algorithm", 9);
+        case REAL:
+        case EXTRA:
+            std::cout << line_with_content(" \033[33m[3]\033[0m Triangular Approximation Heuristic", 9)
+            << line_with_content(" \033[33m[4]\033[0m Nearest Neighbor Heuristic", 9)
+            << line_with_content(" \033[34m[5]\033[0m Real World Heuristic (Christofides)", 9)
+            << line_with_content("")
+            << line_with_content(" \033[31m[0]\033[0m Back", 9)
+            << bottom_line();
+            break;
+        case NONE:
+            err = "invalid dataset state";
+            return DATASET_SELECTION;
+    }
+
+    int num = read_input(), selected;
+    clock_t start, end;
+    double time, cost;
+
+    switch (num) {
+        case 0: //back
+            return DATASET_SELECTION;
+        case 1: //backtracking
+            if (loaded == TOY) {
+                start = clock();
+                cost = g.tspBackTrackingNaive();
+                end = clock();
+                time = (double) (end - start) / CLOCKS_PER_SEC;
+                print_algorith_information("Backtracking Algorithm", time, cost);
+            }
+            else {
+                err = "invalid selection";
+            }
+            break;
+        case 2: //karp
+            if (loaded == TOY) {
+                start = clock();
+                cost = g.tspBackTrackingHeldKarp();
+                end = clock();
+                time = (double) (end - start) / CLOCKS_PER_SEC;
+                print_algorith_information("Held-Karp Algorithm", time, cost);
+            }
+            else {
+                err = "invalid selection";
+            }
+            break;
+        case 3: //triangular
+            std::cout << top_line() << line_with_content(" Select a starting node.") << bottom_line();
+            selected = read_input();
+            if (selected >= g.nodes.size()) {
+                err = "invalid node";
+                return OPERATION_SELECTION;
+            }
+
+            start = clock();
+            if (loaded == REAL) {
+                cost = g.tspTriangularApproxHeuristic(false, selected);
+                end = clock();
+            }
+            else {
+                cost = g.tspTriangularApproxHeuristic(true, selected);
+                end = clock();
+            }
+
+            time = (double) (end - start) / CLOCKS_PER_SEC;
+            print_algorith_information("Triangular Approximation Heuristic", time, cost);
+            break;
+        case 4: //nearest
+            start = clock();
+            cost = g.tspNearestNeighbor();
+            end = clock();
+
+            time = (double) (end - start) / CLOCKS_PER_SEC;
+            print_algorith_information("Nearest Neighbor Heuristic", time, cost);
+            break;
+        case 5: //christofides
+            std::cout << top_line() << line_with_content(" Select a starting node.") << bottom_line();
+            selected = read_input();
+            if (selected >= g.nodes.size()) {
+                err = "invalid node";
+                return OPERATION_SELECTION;
+            }
+
+            start = clock();
+            if (loaded == REAL) {
+                cost = g.tspChristofides(false, selected);
+                end = clock();
+            }
+            else {
+                cost = g.tspChristofides(true, selected);
+                end = clock();
+            }
+
+            time = (double) (end - start) / CLOCKS_PER_SEC;
+            print_algorith_information("Real World Heuristic (Christofides)", time, cost);
+            break;
+        default:
+            err = "invalid selection";
+            return OPERATION_SELECTION;
+    }
+
+    return OPERATION_SELECTION;
+};
+
 int main()
 {
-    //TODO Finally organized this shitty main into testing
-    std::cout << "Run" << '\n';
-    clock_t start, end;
     Parser  p;
     Graph g;
+    bool quit = false;
+    int nodes = 0;
+    InterfaceState state = DATASET_SELECTION;
+    LoadedGraph loaded = NONE;
 
+    // Clear the screen and move cursor
+    std::cout << "\033[2J" << "\033[H";
 
-    //testBackTrackHeldKarp(p, start, end);
-    //cout << "-----------------------------" << endl;
-    testChristofidesExtraFullyConnectGraphs(p, start, end);
-    //testTriangularExtraFullyConnectedGraphs(p, start, end);
-    //cout << "-----------------------------" << endl;
-    //testTriangularRealGraphs(p, start, end);
-    //testNearestNeighborExtraFullyConnectGraphs(p, start, end);
+    while (!quit) {
+        if (!err.empty()) {
+            cout << top_line()
+            << line_with_content("Error: \033[31m " + err + "\033[0m", 9)
+            << bottom_line();
+
+            err.clear();
+        }
+
+        switch (state) {
+            case QUIT:
+                quit = true;
+                break;
+            case DATASET_SELECTION:
+                state = dataset_selection();
+                break;
+            case TOY_SELECTION:
+                state = toy_selection(g, p, loaded);
+                break;
+            case REAL_SELECTION:
+                state = real_selection(g, p, loaded);
+                break;
+            case EXTRA_SELECTION:
+                state = extra_selection(g, p, loaded);
+                break;
+            case OPERATION_SELECTION:
+                state = operation_selection(g, loaded);
+                break;
+        }
+
+        // Clear the screen and move cursor
+        std::cout << "\033[2J" << "\033[H";
+    }
 
     return 0;
 }
