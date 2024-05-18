@@ -217,7 +217,8 @@ double Graph::tspTriangularApproxHeuristic(bool connected, const int &startId)
 
     //Perform a dfs to get the preorder of mst of the graph
     dfsMst(path, startId);
-
+    mst.clear();
+    mst.resize(N);
     return computeTourCost(path);
 }
 
@@ -323,17 +324,19 @@ double Graph::shortcuttingCost(vector<int> &eulerC)
     double cost = 0.0;
     vector<bool> visited(N, false);
     visited[eulerC[0]] = true;
-
+    //cout << eulerC[0] << "->";
     for (int i = 0; i < eulerC.size() - 1; i++)
     {
-        if (!visited[eulerC[i + 1]])
-        {
+        if (!visited[eulerC[i + 1]]) {
             cost += findDistance(eulerC[i], eulerC[i + 1]);
             visited[eulerC[i + 1]] = true;
+            cout << cost/1e3 << "\t";
+            //cout << eulerC[i + 1] << "->";
         }
     }
-
-    cost += findDistance(eulerC.back(), eulerC[0]);
+    cout << endl;
+    //cout << eulerC[N - 1] << ":" << endl;
+    cost += findDistance(eulerC[N - 1], eulerC[0]);
     return cost;
 }
 
@@ -346,7 +349,8 @@ double Graph::tspChristofides(bool connected, const int &startId)
     perfectMatching(perfectMatches); //!Find perfectMatching edges
     combine(perfectMatches); //!Combine the edges of MST and perfectMatching
     eulerianCircuit(eulerC, startId); //!Form a Eulerian Circuit of combined edges
-
+    mst.clear();
+    mst.resize(N);
     /// Computes the cost to the Tour by skipping repeated edges
     /// transforming the Circuit into Hamiltonian
     return shortcuttingCost(eulerC);
