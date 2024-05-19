@@ -5,10 +5,11 @@
  */
 
 #ifndef SOLVINGTSP_GRAPH_H
-#define SOLVINGTSP_GRAPH_h
+#define SOLVINGTSP_GRAPH_H
 
-#include <bits/stdc++.h>
+#include "vector"
 #include "minHeap.h"
+#include <bits/stdc++.h>
 #define ull unsigned long long
 
 using namespace std;
@@ -195,7 +196,7 @@ public:
          * @note The cost of this approach will mainly come from Prims algorithm, as the preorder and cost computation are linear tasks
          * @return An approximation cost of the TSP tour
          * */
-        double tspTriangularApproxHeuristic(bool connected);
+        double tspTriangularApproxHeuristic(bool connected, const int &src = 0);
 
         /**
          * @brief Finds the nearest neighbor of the given node.
@@ -238,7 +239,7 @@ public:
          *      <b>O(V + E)</b>, E -> number of edges, V -> number of nodes
          * </pre>
          */
-        void eulerianCircuit(vector<int> &eulerT);
+        void eulerianCircuit(vector<int> &eulerT, const int &startID = 0);
 
         /**
          * @brief Transforms the eulerian Circuit into a Hamilton circuit by skipping repeated vertices, and computes the cost
@@ -258,7 +259,7 @@ public:
          @param connected indicates of the graph is complete or not
          @return An approximation cost of the TSP tour
          * */
-        double tspChristofides(bool connected);
+        double tspChristofides(bool connected, const int &src = 0);
 
         /**
          * @brief build OneTree of the Graph

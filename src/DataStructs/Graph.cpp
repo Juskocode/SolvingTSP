@@ -81,7 +81,7 @@ double  Graph::tspBackTrackingNaive()
     }
     double minCost = INT_MAX;
     tspBackTrackingNaive(dist, 0, visited, 0, 0, minCost);
-    return minCost;
+    return minCost + 1.0;
 }
 
 void  Graph::tspBackTrackingNaive(vector<vector<double>> dist, int pos, vector<bool>& visited, int count, double cost, double& minCost)
@@ -119,8 +119,8 @@ double Graph::tspBackTrackingHeldKarp() const
     return tspBackTrackingHeldKarp(0, 1, memo, dist);
 }
 
-double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vector<vector<double>> &memo,
-                                      const vector<vector<double>> &dist) const {
+double Graph::tspBackTrackingHeldKarp(int pos, unsigned long long int mask, vector<vector<double>> &memo, const vector<vector<double>> &dist) const
+{
     if (memo[pos][mask] != -1) return memo[pos][mask];
 
     double res = INT_MAX;
@@ -205,19 +205,20 @@ void Graph::dfsMst(vector<int> &path, int src)
     }
 }
 
-double Graph::tspTriangularApproxHeuristic(bool connected)
+double Graph::tspTriangularApproxHeuristic(bool connected, const int &startId)
 {
     vector<int> path;
     //First build the mst of the graph
-    this->buildMst(0, connected);
+    this->buildMst(startId, connected);
 
     //Set all node unvisited
     for (auto node : nodes)
         node->visited = false;
 
     //Perform a dfs to get the preorder of mst of the graph
-    dfsMst(path, 0);
-
+    dfsMst(path, startId);
+    mst.clear();
+    mst.resize(N);
     return computeTourCost(path);
 }
 
@@ -251,6 +252,7 @@ double Graph::tspNearestNeighbor()
         int nn = findNearestNeighbor(path[i - 1]);
         path[i] = nn;
         nodes[nn]->visited = true;
+        //cout << i << "\t";
     }
 
     return computeTourCost(path);
@@ -280,6 +282,7 @@ void Graph::perfectMatching(vector<int> &perfectMatching)
         perfectMatching[nearest] = v;
         node->visited = true;
         nodes[nearest]->visited = true;
+        //cout << node->id << "\t";
     }
 }
 
@@ -292,10 +295,10 @@ void Graph::combine(const vector<int> &perfectMatches)
     }
 }
 
-void Graph::eulerianCircuit(vector<int> &eulerT)
+void Graph::eulerianCircuit(vector<int> &eulerT, const int &startId)
 {
     stack<int> s;
-    s.push(0);
+    s.push(startId);
 
     while (!s.empty())
     {
@@ -323,30 +326,33 @@ double Graph::shortcuttingCost(vector<int> &eulerC)
     double cost = 0.0;
     vector<bool> visited(N, false);
     visited[eulerC[0]] = true;
-
+    //cout << eulerC[0] << "->";
     for (int i = 0; i < eulerC.size() - 1; i++)
     {
-        if (!visited[eulerC[i + 1]])
-        {
+        if (!visited[eulerC[i + 1]]) {
             cost += findDistance(eulerC[i], eulerC[i + 1]);
             visited[eulerC[i + 1]] = true;
+            //cout << cost/1e3 << "\t";
+            //cout << eulerC[i + 1] << "->";
         }
     }
-
-    cost += findDistance(eulerC.back(), eulerC[0]);
+    //cout << endl;
+    //cout << eulerC[N - 1] << ":" << endl;
+    cost += findDistance(eulerC[N - 1], eulerC[0]);
     return cost;
 }
 
-double Graph::tspChristofides(bool connected)
+double Graph::tspChristofides(bool connected, const int &startId)
 {
     vector<int> degree(N, 0), perfectMatches(N, INT_MIN), eulerC;
 
-    buildMst(0, connected); //!Compute MST of graph
+    buildMst(startId, connected); //!Compute MST of graph
     handShackLemma(degree);//!HandShack lemma
     perfectMatching(perfectMatches); //!Find perfectMatching edges
     combine(perfectMatches); //!Combine the edges of MST and perfectMatching
-    eulerianCircuit(eulerC); //!Form a Eulerian Circuit of combined edges
-
+    eulerianCircuit(eulerC, startId); //!Form a Eulerian Circuit of combined edges
+    mst.clear();
+    mst.resize(N);
     /// Computes the cost to the Tour by skipping repeated edges
     /// transforming the Circuit into Hamiltonian
     return shortcuttingCost(eulerC);
