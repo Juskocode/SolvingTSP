@@ -81,7 +81,7 @@ double  Graph::tspBackTrackingNaive()
     }
     double minCost = INT_MAX;
     tspBackTrackingNaive(dist, 0, visited, 0, 0, minCost);
-    return minCost;
+    return minCost + 1.0;
 }
 
 void  Graph::tspBackTrackingNaive(vector<vector<double>> dist, int pos, vector<bool>& visited, int count, double cost, double& minCost)
@@ -252,6 +252,7 @@ double Graph::tspNearestNeighbor()
         int nn = findNearestNeighbor(path[i - 1]);
         path[i] = nn;
         nodes[nn]->visited = true;
+        //cout << i << "\t";
     }
 
     return computeTourCost(path);
@@ -281,6 +282,7 @@ void Graph::perfectMatching(vector<int> &perfectMatching)
         perfectMatching[nearest] = v;
         node->visited = true;
         nodes[nearest]->visited = true;
+        //cout << node->id << "\t";
     }
 }
 
@@ -330,11 +332,11 @@ double Graph::shortcuttingCost(vector<int> &eulerC)
         if (!visited[eulerC[i + 1]]) {
             cost += findDistance(eulerC[i], eulerC[i + 1]);
             visited[eulerC[i + 1]] = true;
-            cout << cost/1e3 << "\t";
+            //cout << cost/1e3 << "\t";
             //cout << eulerC[i + 1] << "->";
         }
     }
-    cout << endl;
+    //cout << endl;
     //cout << eulerC[N - 1] << ":" << endl;
     cost += findDistance(eulerC[N - 1], eulerC[0]);
     return cost;
