@@ -87,7 +87,7 @@ void testChristofidesExtraFullyConnectGraphs(const Parser &p, clock_t start, clo
         end = clock();
         cout << "Christofides Tour cost " << n << ": " << cost / 1e3 << " km" << endl;
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-        cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
+        //cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
     }
 }
 
@@ -124,7 +124,46 @@ void testNearestNeighborExtraFullyConnectGraphs(const Parser &p, clock_t start, 
         end = clock();
         cout << "N.N " << n << ": " << cost / 1e3 << " km" << endl;
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-        cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
+        //cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
+    }
+}
+
+
+void testNearestNeighborRealGraphs(const Parser &p, clock_t start, clock_t end)
+{
+    double cost = 0.0;
+    for (int i = 1; i < 4; i++)
+    {
+        Graph g;
+        string path = "../Data/Real_world_Graphs/graph" + to_string(i);
+        p.readNodes(g, path + "/nodes.csv");
+        p.readEdges(g, path + "/edges.csv");
+
+        start = clock();
+        cost = g.tspNearestNeighbor();
+        end = clock();
+        cout << "Triangle Approx Real Graph" << i << ": " << cost / 1e3 << " km" << endl;
+        cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+        cout << "Performance of cost : " << cost / g.OneTreeLowerBound(false) << endl;
+    }
+}
+
+void testTriangularToyGraphs(const Parser &p, clock_t &start, clock_t &end)
+{
+    vector<pair<string, int>> files = {{"shipping", 14}, {"stadiums", 11}, {"tourism", 5}};
+    for (const auto &[fileName, nodes]: files)
+    {
+        Graph g;
+        string path = "../Data/Toy-Graphs/" + fileName + ".csv";
+        p.readOnlyEdges(g, path, nodes);
+        start = clock();
+        if (fileName == "shipping")
+            cout << "Triangular Approx " << nodes << ": " << g.tspTriangularApproxHeuristic(false) << " m" << endl;
+        else
+            cout << "Triangular Approx " << nodes << ": " << g.tspTriangularApproxHeuristic(true) << " m" << endl;
+        end = clock();
+        cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
+        //cout << "lowerBound : " << g.OneTreeLowerBound() << " m" << endl;
     }
 }
 
@@ -142,7 +181,7 @@ void testTriangularExtraFullyConnectedGraphs(const Parser &p, clock_t start, clo
         end = clock();
         cout << "Triangle Approx " << n << ": " << cost / 1e3 << " km" << endl;
         cout << "Time: " << (double) (end - start) / CLOCKS_PER_SEC << endl;
-        cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
+        //cout << "Performance of cost : " << cost / g.OneTreeLowerBound(true) << endl;
     }
 }
 
@@ -188,6 +227,7 @@ enum InterfaceState {
     REAL_SELECTION,
     EXTRA_SELECTION,
     OPERATION_SELECTION,
+    OPERATION_SELECTION_ALL,
     QUIT
 };
 
@@ -212,28 +252,28 @@ std::string repeat_string(std::string string, int n) {
 }
 
 std::string top_line() {
-    return "┌" + repeat_string("─", 78) + "┐\n";
+    return "+" + repeat_string("-", 77) + "+\n";
 }
 
 std::string line_with_content(const std::string& content, int to_ignore = 0) {
-    std::string line = "│";
+    std::string line = "|";
     line += content;
 
-    if (line.length() <= 81 + to_ignore) {
-        int missing_whitespace = 80 + to_ignore - line.length();
+    if (line.length() <= 79 + to_ignore) {
+        int missing_whitespace = 77 + to_ignore - line.length();
         line += repeat_string(" ", missing_whitespace + 1);
-        line += "│";
+        line += "|";
     }
 
     return line + '\n';
 }
 
 std::string middle_line() {
-    return "├" + repeat_string("─", 78) + "┤\n";
+    return "|" + repeat_string("─", 79) + "|\n";
 }
 
 std::string bottom_line() {
-    return "└" + repeat_string("─", 78) + "┘\n";
+    return "+" + repeat_string("-", 77) + "+\n";
 }
 
 int read_input() {
@@ -286,6 +326,7 @@ InterfaceState toy_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
               << line_with_content(" \033[32m[1]\033[0m Toy Graphs: Shipping", 9)
               << line_with_content(" \033[32m[2]\033[0m Toy Graphs: Stadiums", 9)
               << line_with_content(" \033[32m[3]\033[0m Toy Graphs: Tourism", 9)
+              << line_with_content(" \033[32m*[4]*\033[0m Run all", 9)
               << line_with_content("")
               << line_with_content(" \033[31m[0]\033[0m Back", 9)
               << bottom_line();
@@ -309,6 +350,9 @@ InterfaceState toy_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
             path = "../Data/Toy-Graphs/tourism.csv";
             nodes = 5;
             break;
+        case 4:
+            loaded = TOY;
+            return OPERATION_SELECTION_ALL;
         default: //invalid
             err = "invalid selection";
             return TOY_SELECTION;
@@ -325,6 +369,7 @@ InterfaceState real_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
               << line_with_content(" \033[34m[1]\033[0m Real World Graphs: 1", 9)
               << line_with_content(" \033[34m[2]\033[0m Real World Graphs: 2", 9)
               << line_with_content(" \033[34m[3]\033[0m Real World Graphs: 3", 9)
+              << line_with_content(" \033[34m*[4]*\033[0m Run all", 9)
               << line_with_content("")
               << line_with_content(" \033[31m[0]\033[0m Back", 9)
               << bottom_line();
@@ -344,6 +389,9 @@ InterfaceState real_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
         case 3: //real 3
             path = "../Data/Real_world_Graphs/graph3";
             break;
+        case 4:
+            loaded = REAL;
+            return OPERATION_SELECTION_ALL;
         default: //invalid
             err = "invalid selection";
             return REAL_SELECTION;
@@ -370,6 +418,7 @@ InterfaceState extra_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
               << line_with_content(" \033[33m[10]\033[0m Extra Fully Connected Graphs: 700", 9)
               << line_with_content(" \033[33m[11]\033[0m Extra Fully Connected Graphs: 800", 9)
               << line_with_content(" \033[33m[12]\033[0m Extra Fully Connected Graphs: 900", 9)
+              << line_with_content(" \033[32m*[13]*\033[0m Run all", 9)
               << line_with_content("")
               << line_with_content(" \033[31m[0]\033[0m Back", 9)
               << bottom_line();
@@ -417,6 +466,10 @@ InterfaceState extra_selection(Graph &g, Parser &p, LoadedGraph &loaded) {
         case 12: //extra 900
             nodes = 900;
             break;
+        case 13:
+            loaded = EXTRA;
+            return OPERATION_SELECTION_ALL;
+
         default: //invalid
             err = "invalid selection";
             return EXTRA_SELECTION;
@@ -439,6 +492,80 @@ void print_algorith_information(std::string name, double time, double cost) {
     std::getchar();
 }
 
+InterfaceState operation_selection_all(Graph &g, LoadedGraph &loaded)
+{
+    std::cout << top_line()
+              << line_with_content("    Choose an Heuristic:");
+
+    std::cout << top_line()
+              << line_with_content("    Choose the operation:");
+
+    switch (loaded) {
+        case TOY:
+            std::cout << line_with_content(" \033[32m[1]\033[0m Held-Karp Algorithm", 9)
+                      << line_with_content(" \033[33m[3]\033[0m Triangular Approximation Heuristic", 9)
+                      << line_with_content(" \033[31m[0]\033[0m Back", 9)
+                      << bottom_line();
+            break;
+        case REAL:
+        case EXTRA:
+            std::cout << line_with_content(" \033[33m[3]\033[0m Triangular Approximation Heuristic", 9)
+                      << line_with_content(" \033[33m[4]\033[0m Nearest Neighbor Heuristic", 9)
+                      << line_with_content(" \033[34m[5]\033[0m Christofides Heuristic", 9)
+                      << line_with_content("")
+                      << line_with_content(" \033[31m[0]\033[0m Back", 9)
+                      << bottom_line();
+            break;
+        case NONE:
+            err = "invalid dataset state";
+            return DATASET_SELECTION;
+    }
+    int num = read_input(), selected;
+    clock_t start, end;
+    Parser p;
+
+    switch (num) {
+        case 0: //back
+            return DATASET_SELECTION;
+        case 1: //Held-Karp
+            if (loaded == TOY)
+            {
+                testBackTrackHeldKarp(p, start, end);
+                std::getchar();
+            }
+            else
+                err = "invalid selection";
+            break;
+        case 3: //triangular
+            if (loaded == EXTRA)
+                testTriangularExtraFullyConnectedGraphs(p, start, end);
+            else if (loaded == REAL)
+                testTriangularRealGraphs(p, start, end);
+            else if (loaded == TOY)
+                testTriangularToyGraphs(p, start, end);
+            std::getchar();
+            break;
+        case 4: //N.N
+            if (loaded == EXTRA)
+                testNearestNeighborExtraFullyConnectGraphs(p, start, end);
+            else if (loaded == REAL)
+                testNearestNeighborRealGraphs(p, start, end);
+            std::getchar();
+            break;
+        case 5: //christofides
+            if (loaded == EXTRA)
+                testChristofidesExtraFullyConnectGraphs(p, start, end);
+            else if (loaded == REAL)
+                testChristofidesRealGraphs(p, start, end);
+            std::getchar();
+            break;
+        default:
+            err = "invalid selection";
+            return OPERATION_SELECTION_ALL;
+    }
+
+    return OPERATION_SELECTION_ALL;
+}
 InterfaceState operation_selection(Graph &g, LoadedGraph &loaded) {
     std::cout << top_line()
               << line_with_content("    Choose the operation:");
@@ -451,7 +578,8 @@ InterfaceState operation_selection(Graph &g, LoadedGraph &loaded) {
         case EXTRA:
             std::cout << line_with_content(" \033[33m[3]\033[0m Triangular Approximation Heuristic", 9)
             << line_with_content(" \033[33m[4]\033[0m Nearest Neighbor Heuristic", 9)
-            << line_with_content(" \033[34m[5]\033[0m Real World Heuristic (Christofides)", 9)
+            << line_with_content(" \033[34m[5]\033[0m Christofides Heuristic", 9)
+            << line_with_content(" \033[34m[6]\033[0m Real World (choose Starting Vertex)", 9)
             << line_with_content("")
             << line_with_content(" \033[31m[0]\033[0m Back", 9)
             << bottom_line();
@@ -493,7 +621,9 @@ InterfaceState operation_selection(Graph &g, LoadedGraph &loaded) {
             }
             break;
         case 3: //triangular
-            std::cout << top_line() << line_with_content(" Select a starting node.") << bottom_line();
+            std::cout << top_line() << line_with_content(" Select a starting node from:")
+                    << line_with_content("\t\033[32m0\033[0m - \033[31m" + to_string(g.N) + "\033[0m", 12)
+                    << bottom_line();
             selected = read_input();
             if (selected >= g.nodes.size()) {
                 err = "invalid node";
@@ -511,7 +641,7 @@ InterfaceState operation_selection(Graph &g, LoadedGraph &loaded) {
             }
 
             time = (double) (end - start) / CLOCKS_PER_SEC;
-            print_algorith_information("Triangular Approximation Heuristic", time, cost);
+            print_algorith_information("Triangular Approximation Heuristic*", time, cost);
             break;
         case 4: //nearest
             start = clock();
@@ -522,7 +652,23 @@ InterfaceState operation_selection(Graph &g, LoadedGraph &loaded) {
             print_algorith_information("Nearest Neighbor Heuristic", time, cost);
             break;
         case 5: //christofides
-            std::cout << top_line() << line_with_content(" Select a starting node.") << bottom_line();
+            start = clock();
+            if (loaded == REAL) {
+                cost = g.tspChristofides(false, 0);
+                end = clock();
+            }
+            else {
+                cost = g.tspChristofides(true, 0);
+                end = clock();
+            }
+
+            time = (double) (end - start) / CLOCKS_PER_SEC;
+            print_algorith_information( "Christofides Heuristic", time, cost);
+            break;
+        case 6:
+            std::cout << top_line() << line_with_content(" Select a starting node.")
+            << line_with_content("\t\033[32m0\033[0m - \033[31m" + to_string(g.N) + "\033[0m", 122)
+            << bottom_line();
             selected = read_input();
             if (selected >= g.nodes.size()) {
                 err = "invalid node";
@@ -542,6 +688,7 @@ InterfaceState operation_selection(Graph &g, LoadedGraph &loaded) {
             time = (double) (end - start) / CLOCKS_PER_SEC;
             print_algorith_information("Real World Heuristic (Christofides)", time, cost);
             break;
+
         default:
             err = "invalid selection";
             return OPERATION_SELECTION;
@@ -590,6 +737,8 @@ int main()
             case OPERATION_SELECTION:
                 state = operation_selection(g, loaded);
                 break;
+            case OPERATION_SELECTION_ALL:
+                state = operation_selection_all(g, loaded);
         }
 
         // Clear the screen and move cursor
