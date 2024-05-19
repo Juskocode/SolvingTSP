@@ -187,8 +187,6 @@ public:
          * @brief step2 : dfs traversal, DONE :)
          * @brief step3 : Compute path DONE :)
          * @brief This heuristic approximation only works for complete graphs
-         * //TODO Make this heuristic work for incomplete graphs aka real graphs
-         * //TODO COMPUTE MST FOR INCOMPLETE GRAPHS
          * <b>Complexity\n</b>
          * <pre>
          *      <b>O(|E|log|V|)</b>, E -> number of edges, V -> number of nodes
@@ -269,6 +267,12 @@ public:
          * */
         double OneTreeLowerBound(bool connected);
 
+
+        /**
+         * @brief Computes the TSP tour cost according to the path
+         * @param path The TSP tour path of the graph
+         * @return TSP tou cost
+         * */
         double computeTourCost(const vector<int> & path);
 
         int N;                          //! Number of the nodes in the graph
